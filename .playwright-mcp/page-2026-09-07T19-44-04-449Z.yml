@@ -1,0 +1,101 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e150]:
+    - button "keyboard_double_arrow_left" [ref=f2e153] [cursor=pointer]
+    - generic [ref=f2e158]:
+      - paragraph [ref=f2e162]:
+        - strong [ref=f2e163]: 🏠 Home
+      - button [ref=f2e166] [cursor=pointer]:
+        - paragraph [ref=f2e168]: 🏠 Home
+      - generic [ref=f2e170]:
+        - paragraph [ref=f2e176]:
+          - strong [ref=f2e177]: 📝 Business Survey
+        - button [ref=f2e185] [cursor=pointer]:
+          - paragraph [ref=f2e187]: ▶
+      - generic [ref=f2e189]:
+        - paragraph [ref=f2e195]:
+          - strong [ref=f2e196]: 📁 Campaign Projects
+        - button [ref=f2e204] [cursor=pointer]:
+          - paragraph [ref=f2e206]: ➕
+        - button [ref=f2e214] [cursor=pointer]:
+          - paragraph [ref=f2e216]: 🔄
+      - generic [ref=f2e218]:
+        - button [ref=f2e226] [cursor=pointer]:
+          - paragraph [ref=f2e228]: ▶
+        - button [active] [ref=f2e233] [cursor=pointer]:
+          - paragraph [ref=f2e235]: The first thing I ask a stuck founder isn't 'who is your audience?' It's 'what do you do with your hands?'
+      - generic [ref=f2e237]:
+        - button [ref=f2e245] [cursor=pointer]:
+          - paragraph [ref=f2e247]: ▶
+        - button [ref=f2e252] [cursor=pointer]:
+          - paragraph [ref=f2e254]: "My one-hour rule: if I can't crack the opening after sixty minutes, I take the blank page outside"
+      - paragraph [ref=f2e258]:
+        - strong [ref=f2e259]: ⚙️ Settings and Tools
+      - button [ref=f2e262] [cursor=pointer]:
+        - paragraph [ref=f2e264]: ⚙️ Config Manager
+      - button [ref=f2e267] [cursor=pointer]:
+        - paragraph [ref=f2e269]: 🎤 Find your voice
+  - generic [ref=f2e3]:
+    - banner [ref=f2e6]:
+      - generic [ref=f2e9]:
+        - generic [ref=f2e273]:
+          - img "Running..." [ref=f2e274]
+          - button "Stop" [ref=f2e279] [cursor=pointer]
+        - button "Deploy" [ref=f2e19] [cursor=pointer]
+        - button [ref=f2e23] [cursor=pointer]
+    - generic [ref=f2e27]:
+      - generic [ref=f2e29]:
+        - generic [ref=f2e34]:
+          - button "Fullscreen" [ref=f2e39] [cursor=pointer]
+          - img "0" [ref=f2e45]
+        - heading "Locol AI Content Assistant" [level=1] [ref=f2e52]
+        - generic [ref=f2e55]:
+          - generic [ref=f2e56]: AI-Powered Reddit Storytelling
+          - button [ref=f2e288] [cursor=pointer]:
+            - paragraph [ref=f2e290]: 🚪 Logout
+      - heading "Welcome back, user01!" [level=2] [ref=f2e295]
+      - generic [ref=f2e299]:
+        - generic [ref=f2e300]: Your workflow
+        - generic [ref=f2e301]:
+          - text: Four stages to your next
+          - emphasis [ref=f2e302]: Reddit post
+          - text: .
+        - paragraph [ref=f2e303]: Locol AI turns what you know into content that sounds like you. Stage 1 is optional — most people start with the Business Survey.
+      - generic [ref=f2e305]:
+        - generic [ref=f2e307]:
+          - generic [ref=f2e311]:
+            - generic [ref=f2e312]:
+              - generic [ref=f2e313]: 🎤
+              - generic [ref=f2e314]: STAGE 1
+            - heading "Find Your Voice" [level=3] [ref=f2e316]
+            - generic [ref=f2e318]: Optional
+            - paragraph [ref=f2e319]: Describe how you write and save it as a reusable voice profile, then pick it on a project so drafts sound like you. (Reddit analysis is unavailable — Reddit blocks it.)
+          - button [ref=f2e322] [cursor=pointer]:
+            - paragraph [ref=f2e324]: 🎤 Manage Voices
+        - generic [ref=f2e326]:
+          - generic [ref=f2e330]:
+            - generic [ref=f2e331]:
+              - generic [ref=f2e332]: 📝
+              - generic [ref=f2e333]: STAGE 2
+            - heading "Business Survey" [level=3] [ref=f2e335]
+            - generic [ref=f2e337]: Recommended start
+            - paragraph [ref=f2e338]: Tell Locol AI about your business and expertise. You'll get back AI-generated story ideas to build on.
+          - button [ref=f2e341] [cursor=pointer]:
+            - paragraph [ref=f2e343]: 📝 Start Business Survey
+        - generic [ref=f2e345]:
+          - generic [ref=f2e349]:
+            - generic [ref=f2e350]:
+              - generic [ref=f2e351]: 🎯
+              - generic [ref=f2e352]: STAGE 3
+            - heading "Campaign Projects" [level=3] [ref=f2e354]
+            - paragraph [ref=f2e356]: Turn a story idea into a project, sharpen your angle, and brainstorm specific Reddit post ideas for review.
+          - button [ref=f2e359] [cursor=pointer]:
+            - paragraph [ref=f2e361]: 🎯 Open Campaign Projects
+        - generic [ref=f2e363]:
+          - generic [ref=f2e367]:
+            - generic [ref=f2e368]:
+              - generic [ref=f2e369]: ✍️
+              - generic [ref=f2e370]: STAGE 4
+            - heading "Content Editor" [level=3] [ref=f2e372]
+            - generic [ref=f2e374]: Unlocks later
+            - paragraph [ref=f2e375]: Draft with a prompt library and multiple LLMs side-by-side, then review and publish your Reddit post.
+          - generic [ref=f2e376]: 🔒 Opens from inside a Campaign Project once you've generated content for an idea.

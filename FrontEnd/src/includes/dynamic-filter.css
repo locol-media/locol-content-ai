@@ -1,0 +1,73 @@
+.locol-prompt-filter-dropdown-container {
+    margin-bottom: 20px;
+    display: inline-block;
+    margin-right: 20px;
+    vertical-align: top;
+}
+
+.locol-prompt-filter-dropdown {
+    position: relative;
+    display: block;
+}
+
+.locol-prompt-filter-dropdown-button {
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 12px 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 4px;
+    min-width: 200px;
+    text-align: left;
+}
+
+.locol-prompt-filter-dropdown-button:hover {
+    background-color: #ddd;
+}
+
+.locol-prompt-filter-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.locol-prompt-filter-dropdown-content.locol-prompt-filter-show {
+    display: block;
+}
+
+.locol-prompt-filter-checkbox-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.locol-prompt-filter-checkbox-item:hover {
+    background-color: #f1f1f1;
+}
+
+.locol-prompt-filter-checkbox-item input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.locol-prompt-filter-selected-items {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.locol-prompt-filter-dropdown-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}

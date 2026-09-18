@@ -1,0 +1,176 @@
+- generic:
+  - generic:
+    - generic [ref=f2e2]:
+      - generic [ref=f2e158]:
+        - paragraph [ref=f2e162]:
+          - strong [ref=f2e163]: 🏠 Home
+        - button [ref=f2e166] [cursor=pointer]:
+          - paragraph [ref=f2e168]: 🏠 Home
+        - generic [ref=f2e170]:
+          - paragraph [ref=f2e176]:
+            - strong [ref=f2e177]: 📝 Business Survey
+          - button [ref=f2e185] [cursor=pointer]:
+            - paragraph [ref=f2e187]: ▶
+        - generic [ref=f2e189]:
+          - paragraph [ref=f2e195]:
+            - strong [ref=f2e196]: 📁 Campaign Projects
+          - button [ref=f2e204] [cursor=pointer]:
+            - paragraph [ref=f2e206]: ➕
+          - button [ref=f2e214] [cursor=pointer]:
+            - paragraph [ref=f2e216]: 🔄
+        - generic [ref=f2e218]:
+          - button [ref=f2e385] [cursor=pointer]:
+            - paragraph [ref=f2e387]: ▼
+          - button [ref=f2e233] [cursor=pointer]:
+            - paragraph [ref=f2e235]: The first thing I ask a stuck founder isn't 'who is your audience?' It's 'what do you do with your hands?'
+        - button [ref=f2e390] [cursor=pointer]:
+          - paragraph [ref=f2e392]: "💡 The intro: I’m building an AI tool that turns expertise into Reddit posts — and it will never hit publish for me"
+        - button [ref=f2e401] [cursor=pointer]:
+          - paragraph [ref=f2e403]: 💡 Your hobby is not a distraction. It’s the post your customers actually want to read.
+        - button [ref=f2e412] [cursor=pointer]:
+          - paragraph [ref=f2e414]: 💡 What 40 repair-log posts taught me about getting upvoted in technical subreddits
+        - button [ref=f2e423] [cursor=pointer]:
+          - paragraph [ref=f2e425]: 💡 The self-promotion line is real. Here’s the test I use before I post to a subreddit.
+        - button [ref=f2e434] [cursor=pointer]:
+          - paragraph [ref=f2e436]: 💡 One story can become a five-post series — without repeating yourself. Here’s the breakdown.
+        - button [ref=f2e445] [cursor=pointer]:
+          - paragraph [ref=f2e447]: 💡 Every good technical post has a “before photo” — here’s how to write one in words
+        - button [ref=f2e456] [cursor=pointer]:
+          - paragraph [ref=f2e458]: "💡 AMA: I’m making an AI writing tool that deliberately doesn’t sound like AI. Ask me about the voice profiles and the human-review step."
+        - button [ref=f2e467] [cursor=pointer]:
+          - paragraph [ref=f2e469]: "💡 How to make an AI draft sound like you, not like ChatGPT: the only style test that matters"
+        - button [ref=f2e478] [cursor=pointer]:
+          - paragraph [ref=f2e480]: "💡 Getting the first 100 users without a launch post: I want to pull back the curtain on the plan"
+        - button [ref=f2e489] [cursor=pointer]:
+          - paragraph [ref=f2e491]: 💡 I tried writing about a problem for an hour and then went for a walk — the walk solved it. Notes on debugging and blank pages.
+        - button [ref=f2e500] [cursor=pointer]:
+          - paragraph [ref=f2e502]: "💡 The launch post I’m planning has no link in it: here’s why"
+        - button [ref=f2e511] [cursor=pointer]:
+          - paragraph [ref=f2e513]: 💡 QA idea box probe 15:41:38 (edited)
+        - generic [ref=f2e515]:
+          - button [ref=f2e523] [cursor=pointer]:
+            - paragraph [ref=f2e525]: ▶
+          - button [ref=f2e530] [cursor=pointer]:
+            - paragraph [ref=f2e532]: "My one-hour rule: if I can't crack the opening after sixty minutes, I take the blank page outside"
+        - paragraph [ref=f2e536]:
+          - strong [ref=f2e537]: ⚙️ Settings and Tools
+        - button [ref=f2e540] [cursor=pointer]:
+          - paragraph [ref=f2e542]: ⚙️ Config Manager
+        - button [ref=f2e267] [cursor=pointer]:
+          - paragraph [ref=f2e269]: 🎤 Find your voice
+      - generic [ref=f2e3]:
+        - banner [ref=f2e6]:
+          - generic [ref=f2e9]:
+            - generic [ref=f2e2803]:
+              - img "Running..." [ref=f2e2804]
+              - button "Stop" [ref=f2e2809] [cursor=pointer]
+            - button "Deploy" [ref=f2e19] [cursor=pointer]
+            - button [ref=f2e23] [cursor=pointer]
+        - generic [ref=f2e27]:
+          - heading "🎯 The first thing I ask a stuck founder isn't 'who is your audience?' It's 'what do you do with your hands?'" [level=1] [ref=f2e555]
+          - separator [ref=f2e560]
+          - generic [ref=f2e562]:
+            - generic [ref=f2e563]: 🎯 Project Survey
+            - button [ref=f2e573] [cursor=pointer]:
+              - paragraph [ref=f2e575]: ✏️ Edit Project Survey
+          - generic [ref=f2e1689]:
+            - tablist [ref=f2e1691]:
+              - tab [selected] [ref=f2e1692] [cursor=pointer]:
+                - paragraph [ref=f2e1694]: 📝 Generated Story
+            - tabpanel "📝 Generated Story" [ref=f2e1697]:
+              - generic [ref=f2e1698]:
+                - heading "📝 Generated Story" [level=3] [ref=f2e1703]
+                - group [ref=f2e1707]:
+                  - generic "keyboard_arrow_right 💡 Business Survey Summary" [ref=f2e1708] [cursor=pointer]:
+                    - generic [ref=f2e1709]:
+                      - generic [ref=f2e1710]: keyboard_arrow_right
+                      - paragraph [ref=f2e1713]: 💡 Business Survey Summary
+                - group [ref=f2e1716]:
+                  - generic "keyboard_arrow_right 💡 What is the skill content that we are addressing in this project" [ref=f2e1717] [cursor=pointer]:
+                    - generic [ref=f2e1718]:
+                      - generic [ref=f2e1719]: keyboard_arrow_right
+                      - paragraph [ref=f2e1722]: 💡 What is the skill content that we are addressing in this project
+          - separator [ref=f2e1725]
+          - generic [ref=f2e1727]:
+            - paragraph [ref=f2e1733]: Send your strategic insights to the AI brainstorm engine for campaign development recommendations.
+            - button [ref=f2e1738] [cursor=pointer]:
+              - paragraph [ref=f2e1740]: 🚀 Generate Strategic Campaigns
+          - separator [ref=f2e637]
+          - generic [ref=f2e1741]: 🎯 Project Post Ideas
+          - alert [ref=f2e1746]:
+            - paragraph [ref=f2e1751]: Restored from database
+          - group [ref=f2e1754]:
+            - generic "keyboard_arrow_right ➕ Add Campaign Idea Manually" [ref=f2e1755] [cursor=pointer]:
+              - generic [ref=f2e1756]:
+                - generic [ref=f2e1757]: keyboard_arrow_right
+                - paragraph [ref=f2e1760]: ➕ Add Campaign Idea Manually
+          - heading "✏️ Edit Idea" [level=3] [ref=f2e2814]
+          - generic [ref=f2e2817]:
+            - paragraph [ref=f2e2821]:
+              - strong [ref=f2e2822]: "Editing Idea #12"
+            - generic [ref=f2e2824]:
+              - paragraph [ref=f2e2827]: Title
+              - textbox "Title" [ref=f2e2830]:
+                - /placeholder: ""
+                - text: QA idea box probe 15:41:38 (edited)
+            - generic [ref=f2e2832]:
+              - paragraph [ref=f2e2835]: Description
+              - textbox "Description" [ref=f2e2838]:
+                - /placeholder: ""
+                - text: Edited by the same script, to prove Save Changes persists.
+            - generic [ref=f2e2840]:
+              - generic [ref=f2e2844]:
+                - paragraph [ref=f2e2847]: Content Type
+                - generic [ref=f2e2849]:
+                  - generic [ref=f2e2850]:
+                    - generic [ref=f2e2851]: Case Study
+                    - combobox "Selected Case Study. Content Type" [ref=f2e2853]
+                  - img "open" [ref=f2e2855] [cursor=pointer]
+              - generic [ref=f2e2860]:
+                - paragraph [ref=f2e2863]: Platform
+                - textbox "Platform" [ref=f2e2866]:
+                  - /placeholder: ""
+                  - text: Reddit (edited)
+            - generic [ref=f2e2868]:
+              - paragraph [ref=f2e2871]: Goal
+              - textbox "Goal" [ref=f2e2874]:
+                - /placeholder: ""
+                - text: Thought Leadership
+            - generic [ref=f2e2876]:
+              - button [ref=f2e2882] [cursor=pointer]:
+                - paragraph [ref=f2e2884]: 💾 Save Changes
+              - button [ref=f2e2890] [cursor=pointer]:
+                - paragraph [ref=f2e2892]: ❌ Cancel
+              - button [active] [ref=f2e2901] [cursor=pointer]:
+                - paragraph [ref=f2e2903]: 🗑️ Delete
+          - separator [ref=f2e1837]
+          - heading "💡 Brainstorm Content Snippet" [level=4] [ref=f2e2908]
+          - generic [ref=f2e2911]:
+            - paragraph [ref=f2e2914]: Brainstorming Prompt
+            - textbox "Brainstorming Prompt" [ref=f2e2917]:
+              - /placeholder: e.g. Suggest 5 headline variations for this campaign idea
+              - text: Suggest three headline variations for this campaign idea.
+          - generic [ref=f2e2919]:
+            - paragraph [ref=f2e2922]: 🎤 Voice
+            - generic [ref=f2e2930]:
+              - generic [ref=f2e2931]:
+                - generic [ref=f2e2932]: — No voice —
+                - combobox "Selected — No voice —. 🎤 Voice" [ref=f2e2934]
+              - img "open" [ref=f2e2936] [cursor=pointer]
+          - button [ref=f2e2940] [cursor=pointer]:
+            - paragraph [ref=f2e2942]: 🧠 Brainstorm Content Snippet
+          - generic [ref=f2e2944]:
+            - paragraph [ref=f2e2947]: Brainstorming Response
+            - textbox "Brainstorming Response" [ref=f2e2950]:
+              - /placeholder: ""
+              - text: "Here are three headline variations for your Reddit case study, each tailored to emphasize thought leadership while making the “prove Save Changes persists” angle compelling: 1. **“We Built a Self-Editing Case Study to Test Reddit’s Save Changes Logic—Here’s What Persisted (and What Didn’t)”** *Why it works:* Frames the post as an experiment with findings, driving curiosity and establishing authority on platform behavior. 2. **“Case Study: How a Scripted Edit Exposed the Hidden State of Reddit’s Content Pipeline”** *Why it works:* Positions the project as a deep technical investigation, appealing to engineers, product folks, and platform tinkerers. 3. **“When Save Changes Lies: A QA Probe Into Reddit’s Edit Semantics (with Proof)”** *Why it works:* Uses a bold, slightly provocative hook (“lies”) while hinting at reproducible evidence—perfect for a thought-leadership discussion on reliability and testing."
+          - heading "Previous Content Snippets" [level=5] [ref=f2e2955]
+          - generic [ref=f2e2961]:
+            - button "Show/hide columns" [ref=f2e2965] [cursor=pointer]
+            - button "Download as CSV" [ref=f2e2971] [cursor=pointer]
+            - button "Search" [ref=f2e2977] [cursor=pointer]
+            - button "Fullscreen" [ref=f2e2983] [cursor=pointer]
+          - button [ref=f2e1677] [cursor=pointer]:
+            - paragraph [ref=f2e1679]: 🗑️ Clear Strategic Response
+    - tooltip [ref=f2e2995]:
+      - paragraph [ref=f2e2999]: Delete this idea

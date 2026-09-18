@@ -1,0 +1,70 @@
+- generic [ref=f2e3]:
+  - banner [ref=f2e6]:
+    - generic [ref=f2e9]:
+      - generic [ref=f2e11]:
+        - img "Running..." [ref=f2e12]
+        - button "Stop" [ref=f2e17] [cursor=pointer]
+      - button "Deploy" [ref=f2e19] [cursor=pointer]
+      - button [ref=f2e23] [cursor=pointer]
+  - generic [ref=f2e27]:
+    - generic [ref=f2e29]:
+      - generic [ref=f2e34]:
+        - button "Fullscreen" [ref=f2e39] [cursor=pointer]
+        - img "0" [ref=f2e45]
+      - heading "Locol AI Content Assistant" [level=1] [ref=f2e52]
+      - generic [ref=f2e54]: AI-Powered Reddit Storytelling
+    - generic [ref=f2e61]:
+      - generic [ref=f2e67]:
+        - heading "Your story, told in your voice." [level=1] [ref=f2e69]:
+          - text: Your story, told in your
+          - emphasis [ref=f2e70]: voice.
+        - paragraph [ref=f2e72]: Locol AI plans, writes, and refines your Reddit posts — capturing exactly how you talk, so your story lands the way it deserves to.
+        - generic [ref=f2e73]: Why it works
+        - generic [ref=f2e74]:
+          - generic [ref=f2e75]:
+            - generic [ref=f2e76]: 🎙️
+            - generic [ref=f2e77]:
+              - generic [ref=f2e78]: Sounds like you — not a chatbot
+              - generic [ref=f2e79]: Save a voice profile describing how you write, and every draft carries it — not a generic AI tone.
+          - generic [ref=f2e80]:
+            - generic [ref=f2e81]: 💡
+            - generic [ref=f2e82]:
+              - generic [ref=f2e83]: Your expertise, already a story
+              - generic [ref=f2e84]: Tell us about your business and get back concrete Reddit post ideas — never a blank page.
+          - generic [ref=f2e85]:
+            - generic [ref=f2e86]: 🎯
+            - generic [ref=f2e87]:
+              - generic [ref=f2e88]: A sharpened angle before you write
+              - generic [ref=f2e89]: Audience insight, timing, and positioning get worked out first, so your post has a real reason to land.
+          - generic [ref=f2e90]:
+            - generic [ref=f2e91]: 🛡️
+            - generic [ref=f2e92]:
+              - generic [ref=f2e93]: You're always the final review
+              - generic [ref=f2e94]: Every stage includes a human checkpoint — nothing publishes to Reddit without your go-ahead.
+      - generic [ref=f2e96]:
+        - paragraph [ref=f2e100]: Ready when you are — log in or create a free account below.
+        - generic [ref=f2e102]:
+          - tablist [ref=f2e104]:
+            - tab [selected] [ref=f2e105] [cursor=pointer]:
+              - paragraph [ref=f2e107]: 🔐 Login
+            - tab [ref=f2e108] [cursor=pointer]:
+              - paragraph [ref=f2e110]: 📝 Register
+          - tabpanel "🔐 Login" [ref=f2e113]:
+            - generic [ref=f2e114]:
+              - heading "🔐 Login" [level=3] [ref=f2e119]
+              - generic [ref=f2e123]:
+                - generic [ref=f2e125]:
+                  - paragraph [ref=f2e128]: Username
+                  - textbox "Username" [ref=f2e131]:
+                    - /placeholder: ""
+                    - text: user01
+                - generic [ref=f2e133]:
+                  - paragraph [ref=f2e136]: Password
+                  - generic [ref=f2e138]:
+                    - textbox "Password" [ref=f2e139]:
+                      - /placeholder: ""
+                      - text: user01
+                    - button "Show password text" [ref=f2e140] [cursor=pointer]:
+                      - img "Show password text" [ref=f2e141]
+                - button [active] [ref=f2e146] [cursor=pointer]:
+                  - paragraph [ref=f2e148]: Login

@@ -1,0 +1,242 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locol-ai
+  namespace: locol-ai
+  labels:
+    app: locol-ai
+spec:
+  replicas: 1
+  # Recreate (not the default RollingUpdate): the single replica mounts a
+  # ReadWriteOnce volume, so a new pod cannot attach it until the old pod is
+  # gone. RollingUpdate would deadlock waiting for the volume.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: locol-ai
+  template:
+    metadata:
+      labels:
+        app: locol-ai
+    spec:
+      # The image ends with `USER app` and runs as UID 1000; runAsNonRoot makes the
+      # kubelet refuse to start the pod if a future image regresses to root.
+      #
+      # fsGroup is not optional here. The db-storage PVC mounts over
+      # /app/BackEnd/db with a fresh root-owned volume, and the BackEnd creates
+      # per-user SQLite files there (os.makedirs in BackEnd/src/db_manager.py) - it
+      # gets "permission denied" without this. fsGroup makes the kubelet chgrp the
+      # volume to GID 1000 and mark it group-writable on mount, which also fixes up
+      # a volume that was written by an older root-running image, so no manual chown
+      # is needed when upgrading. OnRootMismatch skips that walk once the top-level
+      # ownership already matches, keeping pod start fast on a large volume.
+      #
+      # On OpenShift restricted-v2, drop runAsUser/fsGroup and let the platform
+      # assign a UID from the namespace range instead.
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      # If pulling from a private registry, create an image pull secret and
+      # reference it here (see docs/deploy-k8s.md):
+      # imagePullSecrets:
+      # - name: registry-credentials
+      containers:
+      - name: locol-ai
+        # Replace with your registry/image:tag, e.g.
+        #   <acct>.dkr.ecr.<region>.amazonaws.com/locol-ai:latest        (ECR)
+        #   registry.digitalocean.com/<your-registry>/locol-ai:latest    (DOCR)
+        image: <YOUR_REGISTRY>/locol-ai:latest
+        imagePullPolicy: Always
+        # readOnlyRootFilesystem is deliberately absent: `uv run` resolves the
+        # virtualenv at start-up, Streamlit writes under $HOME and supervisord writes
+        # a pidfile, so a read-only root would need emptyDir mounts over /tmp and
+        # /home/app. Recorded as accepted residual risk in docs/security-management.md.
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        # Named so 04-service.yaml and 05-ingress.yaml can reference them by name -
+        # changing a port then means editing the number here and the matching key in
+        # 01-configmap.yaml, and nowhere else. The two must stay in step: this is what
+        # the kubelet publishes, the ConfigMap value is what the process actually binds.
+        ports:
+          - name: backend
+            containerPort: 8000   # BackEnd (FastAPI)
+          - name: web
+            containerPort: 8501   # Web (Streamlit)
+          - name: sqlite-web
+            containerPort: 8080   # sqlite-web admin UI (do NOT expose publicly)
+        env:
+        # Ports the supervised processes bind. Optional, like the Bifrost keys below:
+        # the image's own ENV carries the same defaults, so a cluster on an older
+        # ConfigMap keeps starting.
+        - name: LOCOL_BACKEND_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BACKEND_PORT
+              optional: true
+        - name: LOCOL_WEB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_WEB_PORT
+              optional: true
+        - name: LOCOL_SQLITE_WEB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_SQLITE_WEB_PORT
+              optional: true
+        - name: LOCOL_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_API_URL
+        - name: LOCOL_WWW_URL
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_WWW_URL
+        - name: LOCOL_CONFIG_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_CONFIG_LOCATION
+        - name: LOCOL_JWT_KEYS_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_JWT_KEYS_LOCATION
+        - name: LOCOL_DB_ENCRYPTION_KEY_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_DB_ENCRYPTION_KEY_LOCATION
+        - name: LOCOL_LLM_REQUEST_TIMEOUT
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_LLM_REQUEST_TIMEOUT
+        # Comma-separated origins allowed to call the API from a browser. Optional,
+        # and the key ships commented out in 01-configmap.yaml: unset resolves to an
+        # empty allowlist, which is what this deployment wants - the Content Editor
+        # is served from /www on the same host as /api, and the Web app calls the API
+        # server-side where CORS never applies. This entry is what carries the value
+        # into the process, so uncommenting the ConfigMap key is enough to widen the
+        # allowlist - but don't delete this and expect that key to still do anything.
+        - name: LOCOL_CORS_ALLOW_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_CORS_ALLOW_ORIGINS
+              optional: true
+        # All optional so a cluster still running an older ConfigMap keeps starting;
+        # the BackEnd carries its own defaults for each. With LOCOL_BIFROST_ENABLED
+        # set to "false" the URL can be cleared or removed without breaking startup.
+        - name: LOCOL_BIFROST_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BIFROST_ENABLED
+              optional: true
+        - name: LOCOL_BIFROST_URL
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BIFROST_URL
+              optional: true
+        - name: LOCOL_BIFROST_DEFAULT_MODEL
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BIFROST_DEFAULT_MODEL
+              optional: true
+        - name: LOCOL_BIFROST_BUDGET_MAX_LIMIT
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BIFROST_BUDGET_MAX_LIMIT
+              optional: true
+        - name: LOCOL_BIFROST_BUDGET_RESET_DURATION
+          valueFrom:
+            configMapKeyRef:
+              name: locol-ai-config
+              key: LOCOL_BIFROST_BUDGET_RESET_DURATION
+              optional: true
+        - name: DEBUG
+          value: "false"
+        # Only used by the Reddit writing-style analyzer, which is off by default
+        # (Reddit blocks the access it relies on - see BackEnd/src/find_your_voice.py).
+        # Optional so the pod still starts without a Serper account; set
+        # LOCOL_FIND_YOUR_VOICE_ENABLED on both deployments to turn it back on.
+        - name: SERPER_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: locol-ai-secrets
+              key: SERPER_API_KEY
+              optional: true
+        # Only needed if you put Bifrost's governance API behind auth; optional so
+        # the pod still starts when the key isn't in the secret.
+        - name: LOCOL_BIFROST_ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: locol-ai-secrets
+              key: LOCOL_BIFROST_ADMIN_TOKEN
+              optional: true
+        volumeMounts:
+        - name: db-storage
+          mountPath: /app/BackEnd/db
+        # The Streamlit survey content. Served from a ConfigMap rather than the
+        # copy baked into the image so question sets can be edited and rolled out
+        # without a rebuild - see docs/deploy-k8s.md section 4 for creating it.
+        # Deliberately NOT optional, unlike the ConfigMap *keys* above: a missing
+        # ConfigMap holds the pod in ContainerCreating with a clear event, whereas
+        # `optional: true` would mount an empty directory over the baked-in files
+        # and break every survey at runtime instead.
+        - name: question-sets-volume
+          mountPath: /app/Web/question-sets
+        - name: jwt-keys
+          mountPath: /keys
+          readOnly: true
+        - name: db-key
+          mountPath: /db-key
+          readOnly: true
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: locol-ai-storage
+      # Created imperatively from Web/question-sets/ rather than shipped as a
+      # manifest here - that directory stays the single source of truth. The mount
+      # replaces the whole directory, so the ConfigMap must carry every file in it.
+      - name: question-sets-volume
+        configMap:
+          name: question-sets-config
+      # No `items:` list, deliberately - the whole secret is mounted, so it must
+      # carry all FOUR key files: private_key.pem and public_key.pem for the
+      # signature, enc_private_key.pem and enc_public_key.pem for the encrypted
+      # envelope around it (docs/jwt.md). Selecting keys explicitly here would mean
+      # this file needed editing in lockstep with the token format.
+      #
+      # A secret created before the encrypted-token change has only the first two.
+      # The pod still starts - nothing here validates the contents - but BackEnd
+      # then 500s on every authenticated request. See docs/deploy-k8s.md section 4.
+      - name: jwt-keys
+        secret:
+          secretName: locol-ai-jwt-keys
+      - name: db-key
+        secret:
+          secretName: locol-ai-db-key

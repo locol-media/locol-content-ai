@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>Locol Content AI</title>
+
+  <!-- Quill is vendored under includes/vendor/ rather than loaded from a CDN: this
+       page holds a session token, so a compromised CDN response would run with full
+       access to it. jQuery, highlight.js and KaTeX used to be loaded here too and
+       were referenced by nothing - Quill's syntax/formula modules, the only things
+       that would need the latter two, are never enabled. -->
+  <script type="application/javascript" src="/www/includes/vendor/quill.js?v=1786418264"></script>
+
+  <script>
+    //Quill Image handler
+    // Quill.register("modules/imageUploader", ImageUploader);
+    // Quill custom word count component
+    Quill.register('modules/counter', function (quill, options) {
+      var container = document.querySelector('#counter');
+      quill.on('text-change', function () {
+        var text = quill.getText();
+        // There are a couple issues with counting words
+        // this way but we'll fix these later
+        container.innerText = text.split(/\s+/).length;
+      });
+    });
+
+    // register custom fonts
+    const font = Quill.import('formats/font');
+    // We do not add Aref Ruqaa since it is the default
+    font.whitelist = ['mirza', 'roboto', 'aref', 'serif', 'sansserif', 'monospace'];
+    Quill.register(font, true);
+  </script>
+
+  <!-- The only remaining third-party request. A stylesheet cannot execute script,
+       and SRI is impractical here because Google varies the response by user agent.
+       The page degrades to a fallback font if it is blocked. -->
+  <link href="https://fonts.googleapis.com/css?family=Aref+Ruqaa|Mirza|Roboto" rel="stylesheet" />
+  <!-- snow is the theme both editors and the view use; the bubble theme, the
+       highlight.js and KaTeX stylesheets, and a duplicate copy of this one were all
+       loaded from CDNs and styled nothing. -->
+  <link rel="stylesheet" href="/www/includes/vendor/quill.snow.css?v=1786418264" />
+
+  <style>
+    /* Set default font-family */
+    [quill-element] {
+      font-family: 'Roboto';
+    }
+
+    /* Set dropdown font-families */
+    [slot='quill-toolbar'] .ql-font span[data-label='Aref Ruqaa']::before {
+      font-family: 'Aref Ruqaa';
+    }
+
+    [slot='quill-toolbar'] .ql-font span[data-label='Mirza']::before {
+      font-family: 'Mirza';
+    }
+
+    [slot='quill-toolbar'] .ql-font span[data-label='Roboto']::before {
+      font-family: 'Roboto';
+    }
+
+    /* Set content font-families */
+    .ql-font-mirza {
+      font-family: 'Mirza';
+    }
+
+    .ql-font-aref {
+      font-family: 'Aref Ruqaa';
+    }
+
+    /* We do not set Aref Ruqaa since it is the default font */
+    
+    /* Add vertical scroll bars to content_fields */
+    #content_fields {
+      overflow-y: auto;
+      max-height: 300px;
+    }
+    
+    /* Add vertical scroll bars to prompt-editor */
+    #prompt-editor .ql-container {
+      max-height: 400px;
+    }
+    #prompt-editor .ql-editor {
+      overflow-y: auto !important;
+      max-height: 400px !important;
+    }
+    
+    /* Add vertical scroll bars to prompt_window_scroll */
+    #prompt_window_scroll {
+      overflow-y: auto;
+      border: 1px solid #ccc;
+    }
+  </style>
+  <script type="module" src="/www/build/quill-components.esm.js?v=1786418264"></script>
+  <script type="application/javascript" nomodule src="/www/build/quill-components.js?v=1786418264"></script>
+
+  <!-- Must load before every other include: it defines getAPIHeaders() for all of
+       them, and captures the session token out of the URL as early as possible. -->
+  <script type="application/javascript" src="/www/includes/auth.js?v=1786418264"></script>
+</head>
+
+<body>
+ <div id="locol_display">
+  <div class="button-container">
+    <div id="locol-project" class="locol-dropdown"></div>
+    <div id="locol-item" class="locol-dropdown"></div>
+    <div id="locol-channel" class="locol-dropdown"></div>
+    <div id="locol-llm" class="locol-dropdown"></div>
+    <button id="submit_prompt" class="locol-fancy-button">Submit Prompt</button>
+    <button id="save_content" class="locol-fancy-button">Save Content</button>
+  </div>          
+
+  <nav></nav>
+  <main class="panes panes-v">
+    <div id="panel_main" class="pane panes panes-h">
+      <div id="panel_left" class="pane panes panes-v">
+        <div id="locol_content" class="pane">
+          <h3>Content Editor</h3>
+          <quill-editor id="quill-editor" styles='{"background-color": "white"}' format="json" content=""
+            custom-toolbar-position="top">
+            <div slot="quill-toolbar">
+              <span class="ql-formats">
+                <select class="ql-font">
+                  <option value="aref">Aref Ruqaa</option>
+                  <option value="mirza">Mirza</option>
+                  <option selected>Roboto</option>
+                </select>
+                <select class="ql-align" title="Aligment">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+                <select class="ql-align" title="Aligment2">
+                  <option selected></option>
+                  <option value="center"></option>
+                  <option value="right"></option>
+                  <option value="justify"></option>
+                </select>
+              </span>
+              <span class="ql-formats">
+                <div id="counter"></div>
+              </span>
+            </div>
+          </quill-editor>
+        </div>
+        <div id="locol_prompt_input" class="pane">
+          <h3 id="prompt_input">Prompt Input</h3>
+          <div id="content_fields"></div>
+          <script type="application/javascript" src="/www/includes/dynamic-fields.js?v=1786418264"></script>
+        </div>
+      </div>
+      <div id="panel_right" class="pane panes panes-v">
+        <div id="locol_history" class="pane">
+          <h3>History</h3>
+          <quill-view id="view" theme="snow" format="json" content=""> </quill-view>
+        </div>
+        <div class="pane">
+          <div id="panel_prompt" class="pane panes panes-h">
+            <div id="locol_prompt_editor" class="pane">
+              <h3 id="prompt_editor_header">Prompt Editor</h3>
+              <quill-editor id="prompt-editor" styles='{"background-color": "white"}' format="json" content=""
+                custom-toolbar-position="top">
+                <div slot="quill-toolbar"></div>
+              </quill-editor>
+            </div>
+            <div id="locol_prompt_window" class="pane">
+              <h3 id="prompt_window">Prompt Window</h3>
+              <div id="prompt_window_scroll">
+                <div id="locol-prompt-filter-dropdownsContainer">
+                    <!-- Dropdowns will be generated here -->
+                </div>               
+                <div class="locol-prompt-filter-selected-items">
+                    <strong>All Selected Items:</strong>
+                    <div id="locol-prompt-filter-selectedItems">None selected</div>
+                </div>              
+              <div class="scrollable-container" id="entryContainer">
+                <!-- Entries will be dynamically added here -->
+              </div>
+              </div>
+              <script type="application/javascript" src="/www/includes/prompt-window.js?v=1786418264"></script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  </div>
+</body>
+<script type="application/javascript" src="/www/includes/grid-master.js?v=1786418264"></script>
+<script>
+// Dynamically adjust main container and prompt_window_scroll for flexible bottom resizing
+function adjustMainHeight() {
+  const main = document.querySelector('main');
+  const nav = document.querySelector('nav');
+  const navHeight = nav ? nav.offsetHeight : 0;
+  const windowHeight = window.innerHeight;
+  
+  // Set main to fill remaining height
+  main.style.height = `${windowHeight - navHeight}px`;
+  main.style.minHeight = `${windowHeight - navHeight}px`;
+  
+  // Also set panel_main, panel_left, and panel_right heights
+  const panelMain = document.getElementById('panel_main');
+  const panelLeft = document.getElementById('panel_left');
+  const panelRight = document.getElementById('panel_right');
+  const locolPromptWindow = document.getElementById('locol_prompt_window');
+  const locolPromptEditor = document.getElementById('prompt-editor');
+
+  if (panelMain) {
+    panelMain.style.height = `${windowHeight - navHeight}px`;
+  }
+  if (panelLeft) {
+    panelLeft.style.height = `${windowHeight - navHeight}px`;
+  }
+  if (panelRight) {
+    panelRight.style.height = `${windowHeight - navHeight}px`;
+  }
+  if (locolPromptWindow) {
+    locolPromptWindow.style.height = `${windowHeight - navHeight}px`;
+  }
+  if (locolPromptEditor) {
+    const rect = locolPromptEditor.getBoundingClientRect();
+    const availableHeight = windowHeight - rect.top;
+    locolPromptEditor.style.height = `${availableHeight}px`;
+    locolPromptEditor.style.maxHeight = `${availableHeight - 100}px`;
+    console.log(`Set Prompt Editor height to ${availableHeight}`)
+  }
+  // Calculate and set height for prompt_window_scroll
+  const promptWindowScroll = document.getElementById('prompt_window_scroll');
+  if (promptWindowScroll) {
+    const rect = promptWindowScroll.getBoundingClientRect();
+    const availableHeight = windowHeight - rect.top;
+    promptWindowScroll.style.height = `${availableHeight}px`;
+      console.log(`Set Prompt Window height to ${availableHeight}`)
+  }
+}
+
+// Run on load and resize
+window.addEventListener('load', adjustMainHeight);
+window.addEventListener('resize', adjustMainHeight);
+
+// Add observer to detect dynamic content changes
+const observer = new MutationObserver(() => {
+  setTimeout(adjustMainHeight, 100); // Small delay to ensure content is rendered
+});
+
+// Observe changes in the prompt editor and window areas
+window.addEventListener('load', () => {
+  const promptEditor = document.getElementById('prompt-editor');
+  const promptWindow = document.getElementById('locol_prompt_window');
+  
+  if (promptEditor) {
+    observer.observe(promptEditor, { childList: true, subtree: true });
+  }
+  if (promptWindow) {
+    observer.observe(promptWindow, { childList: true, subtree: true });
+  }
+});
+
+// Function to manually trigger height adjustment (call this after dynamic content loads)
+window.refreshLayout = function() {
+  adjustMainHeight();
+};
+</script>
+<script type="application/javascript" src="/www/includes/quill-editor-window.js?v=1786418264"></script>
+<script type="application/javascript" src="/www/includes/dynamic-dropdown-class.js?v=1786418264"></script>
+<script type="application/javascript" src="/www/includes/dynamic-dropdowns.js?v=1786418264"></script>
+<script type="application/javascript" src="/www/includes/intro.min.js?v=1786418264"></script>
+<script type="application/javascript" src="/www/includes/getting-started.js?v=1786418264"></script>
+<script type="application/javascript" src="/www/includes/dynamic-filter.js?v=1786418264"></script>
+<link rel="stylesheet" href="/www/includes/grid-master.css" />
+<link rel="stylesheet" href="/www/includes/prompt-window.css" />
+<link rel="stylesheet" href="/www/includes/dynamic-dropdowns.css" />
+<link rel="stylesheet" href="/www/includes/introjs.min.css" />
+<link rel="stylesheet" href="/www/includes/dynamic-filter.css" />
+</html>

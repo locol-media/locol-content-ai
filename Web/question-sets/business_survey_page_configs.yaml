@@ -1,0 +1,22 @@
+# Page configuration for business survey sections
+# Defines the structure and metadata for each category
+
+basic_info:
+  title: "🏢 Basic Business Information"
+  description: "Let's start with the fundamentals about your business"
+  emoji: "🏢"
+
+goals_strategy:
+  title: "🎯 Goals & Strategy"
+  description: "Tell us about your content goals and current strategy"
+  emoji: "🎯"
+
+challenges_market:
+  title: "💡 Skills & Expertise"
+  description: "Tell us about your professional background and the expertise you bring to your customers"
+  emoji: "💡"
+
+content_preferences:
+  title: "🎨 Hobbies & Interests"
+  description: "Share your personal passions — hobbies make great content and help your audience connect with you"
+  emoji: "🎨"

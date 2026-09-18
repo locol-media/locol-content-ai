@@ -1,0 +1,26 @@
+
+
+id: "reddit_deep_dive"
+name: "Deep Dive Reddit Post"
+tags: [Social,tone:conversational]
+template: |
+  OBJECTIVE: 
+    Generate a comprehensive, highly valuable markdown guide that solves a specific, painful problem.
+  CONTENT:
+    This is the content you should generate: {Content}
+    Write with this in mind: {Additional_Context}
+
+  TONE:
+    1. Expert, practical, and highly scannable. 
+    2. Cut all fluff and filler sentences. Lead with data, code snippets, or specific steps immediately.
+    3. Use bolding for emphasis on critical warning signs or pitfalls to avoid.
+    Additional notes:
+    - Ideal length: {Prefered_Length}
+
+  REQUIRED STRUCTURE:
+    - Title: Clear, value-focused title (e.g., "The Complete Blueprint to [Achieve X] Without [Common Failure Mode]")
+    - Executive Summary: A quick 2-sentence blockquote at the top stating exactly what this guide covers and who it is for.
+    - Section Headers: Use markdown headers (##, ###) to separate concepts.
+    - Data/Comparison: Include a clean markdown table comparing strategies, tools, or metrics if applicable.
+    - Bullet Points: Use lists for actionable steps or prerequisites.
+

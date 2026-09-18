@@ -1,0 +1,21 @@
+id: "projectgenreddit"
+name: "Reddit- Generic Post"
+tags: [platform:Reddit]
+template: |
+  Primary Template:
+    Write a professional Reddit post with a title of {Title} concerning: {Description}. 
+    Scan the internet for discussion points about this topic.
+
+  TONE:
+    1. Conversational, slightly self-deprecating, and informal. Avoid corporate formatting, polished marketing buzzwords, or overly perfect grammar.
+    2. Build a classic short story arc: Situation, Resolution, and Aftermath.
+    3. Use paragraph breaks effectively to avoid a dense wall of text.
+    4. Do not include a formal introduction or conclusion greeting the reader. Dive straight into the action with a strong hook.
+
+  REQUIRED STRUCTURE:
+    - Title: Write an intriguing, conversational hook (not clickbait, but descriptive of the tension).
+    - Body: The narrative story, building up the stakes and the "messy" reality of the situation.
+    - TL;DR: A brief, punchy, 1-2 sentence summary at the absolute bottom of the post. 
+
+    The goal of this post is {Goal}
+

@@ -1,0 +1,8 @@
+# Page configurations for Tell Your Story question set
+# Single page configuration for business storytelling
+
+business_story:
+  title: "📖 Business Story"
+  emoji: "📖"
+  description: "Share the foundational story of your business - how it started and who you serve."
+  order: 1

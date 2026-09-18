@@ -1,0 +1,20 @@
+# Python-generated files.
+# The directory patterns below are anchored with a leading slash so they only
+# match BackEnd/build, BackEnd/dist and BackEnd/wheels. Unanchored, "build/"
+# also matched www/build/ - the Stencil output directory holding the compiled
+# quill-editor/quill-view components - so the Content Editor's web components
+# were silently never committed, and any container image (which only copies
+# what is tracked) served an index.html whose component scripts 404'd. The
+# panes then rendered nothing, with no error.
+__pycache__/
+*.py[oc]
+/build/
+/dist/
+/wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# LLM configuration files (contain API keys)
+llms/*

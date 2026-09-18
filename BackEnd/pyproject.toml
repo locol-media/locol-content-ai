@@ -1,0 +1,40 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "bs4>=0.0.2",
+    "cryptography>=45.0.6",
+    "fastapi>=0.116.1",
+    # jwcrypto handles both layers of the session token: the RS256 signature and the
+    # ECDH-ES+A256KW / A256GCM envelope around it. See docs/jwt.md.
+    #
+    # It replaced authlib + PyJWT here. authlib.jose is deprecated as of Authlib
+    # 1.7.0 and slated for removal in 1.8, which forced an <1.7 pin - and since
+    # fastmcp also depends on authlib, that pin would have become an unsatisfiable
+    # conflict the moment fastmcp's floor rose. PyJWT went too because it has no JWE
+    # support, so it could only ever do half the job. Both remain in uv.lock as
+    # transitive deps of fastmcp and mcp respectively; neither is used here.
+    #
+    # Keep this version floor in step with Web/pyproject.toml: both ends of one token
+    # format have to agree on how it is serialized and parsed.
+    "jwcrypto>=1.6.0",
+    "pydantic>=2.11.7",
+    "pydantic-ai>=0.4.4",
+    "slowapi>=0.1.10",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# main.py mounts StaticFiles(directory="www") at import time, which raises if the
+# relative path does not resolve, so the suite only imports cleanly from BackEnd/.
+pythonpath = ["src", "../Web/src"]

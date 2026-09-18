@@ -1,0 +1,119 @@
+# Bifrost (https://github.com/maximhq/bifrost) — the LLM gateway that other
+# services in this namespace route model traffic through, instead of calling
+# providers directly.
+#
+# Internal only: there is no Ingress for this app. The same port 8080 serves
+# both the proxy API and the admin/monitoring web UI, so exposing it publicly
+# would hand out the provider configuration. Reach the UI with
+# `kubectl port-forward` when needed.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bifrost
+  namespace: locol-ai
+  labels:
+    app: bifrost
+spec:
+  replicas: 1
+  # Recreate (not the default RollingUpdate): the single replica mounts a
+  # ReadWriteOnce volume, so a new pod cannot attach it until the old pod is
+  # gone. RollingUpdate would deadlock waiting for the volume.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bifrost
+  template:
+    metadata:
+      labels:
+        app: bifrost
+    spec:
+      # The image runs as UID 1000 (upstream Dockerfile ends with USER 1000:0)
+      # and chowns /app/data at build time — but the PVC mounts over that with a
+      # fresh root-owned volume, so the process gets "mkdir /app/data/logs:
+      # permission denied". fsGroup makes the kubelet chgrp the volume to GID
+      # 1000 and mark it group-writable on mount. Values match the upstream
+      # Helm chart's podSecurityContext.
+      #
+      # On OpenShift restricted-v2, drop runAsUser/fsGroup and let the platform
+      # assign a UID from the namespace range instead.
+      securityContext:
+        runAsUser: 1000
+        runAsNonRoot: true
+        fsGroup: 1000
+      containers:
+      - name: bifrost
+        # Pin a released version — do NOT use :latest. Releases are listed at
+        # https://hub.docker.com/r/maximhq/bifrost/tags
+        image: docker.io/maximhq/bifrost:<BIFROST_VERSION>
+        # IfNotPresent (not Always, as elsewhere in this repo) because the tag
+        # above is an immutable version, not a moving tag.
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+          - name: http
+            containerPort: 8080   # proxy API + admin web UI (do NOT expose publicly)
+        env:
+        - name: APP_PORT
+          value: "8080"
+        - name: APP_HOST
+          value: "0.0.0.0"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: LOG_STYLE
+          value: "json"
+        # Provider API keys. Bifrost's config references them by name
+        # (e.g. env.DEEPSEEK_API_KEY), so the set of keys is open-ended — hence
+        # envFrom here rather than the one-secretKeyRef-per-variable style used
+        # by the locol-ai deployment. optional: true lets this Deployment apply
+        # before the Secret exists; create it with:
+        #   kubectl -n locol-ai create secret generic bifrost-secrets \
+        #     --from-literal=DEEPSEEK_API_KEY=...
+        #
+        # Setting a variable here does nothing on its own: Bifrost does not
+        # discover providers from the environment. Until a provider entry exists
+        # in its own config (admin UI → Model Providers) whose key value is the
+        # literal string "env.DEEPSEEK_API_KEY", every call for that provider
+        # fails with "no keys found for provider". See docs/deploy-k8s.md.
+        #
+        # envFrom is resolved at pod start, so creating or changing this Secret
+        # needs a `kubectl -n locol-ai rollout restart deploy/bifrost`.
+        envFrom:
+        - secretRef:
+            name: bifrost-secrets
+            optional: true
+        # Bifrost serves /health. Unlike the locol-ai deployment (which has no
+        # probes), this app sits in the request path of every model call, so it
+        # must be pulled out of the Service as soon as it stops answering.
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 20
+        volumeMounts:
+        - name: bifrost-data
+          mountPath: /app/data
+      volumes:
+      - name: bifrost-data
+        persistentVolumeClaim:
+          claimName: bifrost-storage

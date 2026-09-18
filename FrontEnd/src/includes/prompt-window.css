@@ -1,0 +1,54 @@
+
+.scrollable-container {
+    width: 100%;
+    height: 100vh;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  .entry {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+
+  .entry:hover {
+    background-color: #e0e0e0;
+  }
+
+  .entry.selected {
+    background-color: #007bff;
+    color: white;
+  }
+
+  #content_fields > div  {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding-top: 16px; /* Space for floating label */
+  }
+
+  #content_fields > div > label {
+    position: absolute;
+    top: 0;
+    left: 8px;
+    font-size: 14px;
+    background: white;
+    padding: 2px 4px;
+    color: #555;
+  }
+
+  #content_fields > div > textarea {
+    resize: vertical; /* Enables both horizontal & vertical resizing */
+    min-height: 80px;
+    padding: 10px;
+    width: 100%;
+    border: 1px solid;
+    border-radius: 4px;
+    font-size: 16px;
+  }

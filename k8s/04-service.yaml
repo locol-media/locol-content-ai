@@ -1,0 +1,24 @@
+# Only the two public-facing ports are exposed here. The sqlite-web admin UI
+# (container port 8080) is intentionally NOT in this Service — reach it with
+# `kubectl port-forward` when needed, never via the Ingress.
+apiVersion: v1
+kind: Service
+metadata:
+  name: locol-ai-service
+  namespace: locol-ai
+spec:
+  selector:
+    app: locol-ai
+  # targetPort refers to the named containerPorts in 03-deployment.yaml, so moving a
+  # container port needs no edit here. The cluster-facing `port` values are independent
+  # of it - 05-ingress.yaml addresses them by name, so they can stay put either way.
+  ports:
+  - name: backend
+    port: 8000
+    targetPort: backend
+    protocol: TCP
+  - name: frontend
+    port: 8501
+    targetPort: web
+    protocol: TCP
+  type: ClusterIP

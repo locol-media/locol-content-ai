@@ -1,0 +1,58 @@
+# nginx-ingress + cert-manager. Routes /api and /www to the BackEnd and
+# everything else to the Web UI, by Service port name. Requires:
+#   - an ingress-nginx controller installed in the cluster
+#   - cert-manager installed with a ClusterIssuer named below
+# Replace <YOUR_HOST> with your DNS name and point it at the ingress LB.
+#
+# On EKS you may prefer the AWS Load Balancer Controller (ALB) instead of
+# nginx — if so, swap the ingressClassName/annotations accordingly (see
+# docs/deploy-k8s.md).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: locol-ai-ingress
+  namespace: locol-ai
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # Content generation runs an LLM call per selected idea, so requests can
+    # take minutes. Without these, nginx's 60s default cuts them off as a 504.
+    # Deliberately above LOCOL_LLM_REQUEST_TIMEOUT in 01-configmap.yaml (180) so
+    # the app's own timeout always fires first and the user gets its error
+    # message rather than an opaque 504 - raise both together.
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "240"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "240"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - <YOUR_HOST>
+    secretName: locol-ai-tls
+  rules:
+  - host: <YOUR_HOST>
+    http:
+      paths:
+      # Service ports by name (see 04-service.yaml), so a port change is confined to
+      # 01-configmap.yaml and 03-deployment.yaml.
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: locol-ai-service
+            port:
+              name: backend
+      - path: /www
+        pathType: Prefix
+        backend:
+          service:
+            name: locol-ai-service
+            port:
+              name: backend
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: locol-ai-service
+            port:
+              name: frontend

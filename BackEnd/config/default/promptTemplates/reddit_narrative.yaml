@@ -1,0 +1,25 @@
+
+
+id: "reddit_narrative"
+name: "First-person Narrative"
+tags: [Social,tone:conversational]
+template: |
+  OBJECTIVE: 
+    Create a highly engaging, authentic-sounding first-person narrative post for Reddit.
+  CONTENT:
+    This is the content you should generate: {Content}
+    Write with this in mind: {Additional_Context}
+
+  TONE:
+    1. Conversational, slightly self-deprecating, and informal. Avoid corporate formatting, polished marketing buzzwords, or overly perfect grammar.
+    2. Build a classic story arc: Setup, Incident, Escalation, Resolution, and Aftermath.
+    3. Use paragraph breaks effectively to avoid a dense wall of text.
+    4. Do not include a formal introduction or conclusion greeting the reader. Dive straight into the action with a strong hook.
+    Additional notes:
+    - Ideal length: {Prefered_Length}
+
+  REQUIRED STRUCTURE:
+    - Title: Write an intriguing, conversational hook (not clickbait, but descriptive of the tension).
+    - Body: The narrative story, building up the stakes and the "messy" reality of the situation.
+    - TL;DR: A brief, punchy, 1-2 sentence summary at the absolute bottom of the post. 
+

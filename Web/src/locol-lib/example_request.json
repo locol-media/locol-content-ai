@@ -1,0 +1,169 @@
+{
+  "business_survey": {
+    "business_name": {
+      "value": "TechStart Solutions"
+    },
+    "business_description": {
+      "value": "We provide AI-powered business automation tools for small and medium enterprises."
+    },
+    "industry": {
+      "value": "SaaS/Technology"
+    },
+    "industry_other": {
+      "value": null
+    },
+    "target_audience": {
+      "value": "Small business owners, operations managers, and entrepreneurs looking to streamline their workflows"
+    },
+    "services": {
+      "value": "Business process automation, AI chatbots, workflow optimization, data analytics dashboards, integration services"
+    },
+    "unique_value": {
+      "value": "We offer enterprise-level automation at SMB prices with 24/7 support and no-code setup"
+    },
+    "business_goals": {
+      "value": ["Lead Generation", "Brand Awareness", "Thought Leadership"]
+    },
+    "audience_interests": {
+      "value": "Automation trends, productivity tips, cost-saving strategies, digital transformation, small business growth"
+    },
+    "current_content": {
+      "value": "How-to guides, case studies, product demos, industry trend analysis"
+    },
+    "competitors": {
+      "value": "Zapier, Monday.com, Airtable"
+    },
+    "influencers": {
+      "value": "Harvard Business Review, Entrepreneur Magazine, TechCrunch, small business podcasts"
+    },
+    "platforms": {
+      "value": ["LinkedIn", "Twitter/X", "Company Blog"]
+    },
+    "customer_challenges": {
+      "value": "Manual processes eating up time, inconsistent data across systems, lack of technical expertise"
+    },
+    "industry_trends": {
+      "value": "AI adoption, remote work tools, no-code/low-code solutions, data privacy concerns"
+    },
+    "frequent_questions": {
+      "value": "How much time will this save? Is it secure? Can it integrate with our existing tools? What if we need help?"
+    },
+    "seasonal_patterns": {
+      "value": "Q4 budget planning, New Year efficiency resolutions, summer slower periods, back-to-school busy season"
+    },
+    "posting_frequency": {
+      "value": "Several times per week"
+    },
+    "content_preference": {
+      "value": "Educational"
+    },
+    "content_types": {
+      "value": ["Articles/Blog posts", "How-to guides", "Case studies", "Social media posts"]
+    },
+    "topics_to_avoid": {
+      "value": "Complex technical jargon, expensive enterprise solutions, job replacement fears"
+    },
+    "additional_notes": {
+      "value": "Focus on empowerment and growth, not replacement. Emphasize human support and ease of use."
+    }
+  },
+  "strategic_survey": {
+    "q1": {
+      "question": "What specific problem were you trying to solve when you first created this product?",
+      "value": "I was frustrated seeing small businesses struggle with manual tasks that big companies had automated years ago. There was clearly a gap in affordable, easy-to-use automation tools.",
+      "category": "emotional_motivation"
+    },
+    "q2": {
+      "question": "What's the most surprising way you've seen customers use your product?",
+      "value": "A yoga studio started using our system to automatically manage class bookings, send reminder texts, and even create personalized meditation playlists for clients based on their attendance patterns.",
+      "category": "emotional_motivation"
+    },
+    "q3": {
+      "question": "Can you share a customer story that gave you goosebumps?",
+      "value": "A local restaurant owner told me our system helped her reclaim 15 hours per week that she now spends with her family instead of doing inventory manually. She literally had tears in her eyes.",
+      "category": "emotional_motivation"
+    },
+    "q4": {
+      "question": "What would your customers' lives look like without this product?",
+      "value": "They'd be drowning in spreadsheets, staying up late to manually process orders, missing opportunities because they can't respond fast enough, and burning out from repetitive tasks instead of growing their business.",
+      "category": "emotional_motivation"
+    },
+    "q5": {
+      "question": "What's one thing about your product that competitors never talk about?",
+      "value": "We're the only platform that offers white-glove onboarding with a real human who stays with you for 90 days. Most competitors just give you documentation and wish you luck.",
+      "category": "positioning_angles"
+    },
+    "q6": {
+      "question": "If you had to sell this to your biggest skeptic, what would you lead with?",
+      "value": "I'd show them the exact ROI calculator with real customer data - how Sarah from the bakery saved $2,400 in labor costs in month one, and how Tom's consulting firm increased client capacity by 40% without hiring.",
+      "category": "positioning_angles"
+    },
+    "q7": {
+      "question": "What assumptions do people make about your product that are completely wrong?",
+      "value": "People think automation is only for tech companies or that it's going to replace their staff. Actually, it frees up their best people to do what humans do best - build relationships and solve creative problems.",
+      "category": "positioning_angles"
+    },
+    "q8": {
+      "question": "How do you use your own product differently than you tell others to use it?",
+      "value": "I use our own system to automatically track which customers are at risk of churning based on usage patterns, then personally call them with solutions before they even know they're frustrated.",
+      "category": "positioning_angles"
+    },
+    "q9": {
+      "question": "Who's buying your product that you never expected would?",
+      "value": "Surprisingly, we're getting a lot of creative agencies and marketing firms who use our tools to automate client reporting and project management. Also, several non-profits who need to stretch every dollar.",
+      "category": "audience_insights"
+    },
+    "q10": {
+      "question": "What do your customers talk about when they're not talking about your product?",
+      "value": "Work-life balance, finding good employees, dealing with inflation, staying competitive with larger companies, keeping up with technology changes.",
+      "category": "audience_insights"
+    },
+    "q11": {
+      "question": "If you could eavesdrop on your customers at dinner, what would they be complaining about?",
+      "value": "Not enough hours in the day, unreliable staff, technology that promises everything but delivers headaches, feeling like they're always behind the competition.",
+      "category": "audience_insights"
+    },
+    "q12": {
+      "question": "What other brands or products do your customers obsess over?",
+      "value": "Apple (for user experience), Patagonia (for values-driven business), local coffee shops (for personal service), Shopify (for enabling small business success).",
+      "category": "audience_insights"
+    },
+    "q13": {
+      "question": "What's happening in your customers' world right now that they're stressed about?",
+      "value": "Rising labor costs, difficulty finding reliable staff, increased competition from larger companies with better systems, economic uncertainty affecting customer spending.",
+      "category": "cultural_timing"
+    },
+    "q14": {
+      "question": "Is there a time of year when your product becomes absolutely essential?",
+      "value": "End of Q4 when they're planning next year's budget and operations. Also right after they hire someone new and realize training takes forever, or when they're considering expanding but worried about operational complexity.",
+      "category": "cultural_timing"
+    },
+    "q15": {
+      "question": "What trends are you seeing that others in your industry are ignoring?",
+      "value": "The shift toward 'business intimacy' - customers want to feel known and valued, not just processed. Also, the rise of async communication preferences, especially among younger business owners.",
+      "category": "cultural_timing"
+    },
+    "q16": {
+      "question": "What would make someone need your product RIGHT NOW instead of next month?",
+      "value": "Key employee quits unexpectedly, big client demands faster turnaround, competitor launches something that makes them look outdated, or they realize they're losing money every day they delay.",
+      "category": "cultural_timing"
+    },
+    "q17": {
+      "question": "What can you do with your resources that a massive competitor couldn't?",
+      "value": "We can pivot instantly based on customer feedback. When customers asked for integration with a local POS system, we had it ready in two weeks. Enterprise companies would need months of committee meetings.",
+      "category": "differentiators"
+    },
+    "q18": {
+      "question": "What's your 'secret sauce' that you've never put in marketing before?",
+      "value": "Our founder personally onboarded the first 500 customers, so we have incredibly deep insights into the real problems and the exact language customers use to describe their pain points.",
+      "category": "differentiators"
+    },
+    "q19": {
+      "question": "What would happen if you did the complete opposite of what everyone else in your industry does?",
+      "value": "Instead of selling automation, we'd sell 'time liberation.' Instead of features, we'd sell family dinners. Instead of efficiency, we'd sell the ability to say yes to opportunities without panic.",
+      "category": "differentiators"
+    }
+  },
+  "timestamp": "2025-06-28T15:30:45.123456",
+  "request_type": "strategic_brainstorm"
+}

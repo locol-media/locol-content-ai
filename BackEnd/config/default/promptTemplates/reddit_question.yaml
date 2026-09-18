@@ -1,0 +1,23 @@
+
+
+id: "reddit_question"
+name: "Open Ended Question"
+tags: [Social,tone:question]
+template: |
+  OBJECTIVE: 
+    Write an engaging, open-ended discussion post designed to maximize comment volume.
+  CONTENT:
+    This is the content you should generate: {Content}
+    Write with this in mind: {Additional_Context}
+
+  TONE:
+    1. Direct, transparent, and brief. The focus must be on prompting *them* to speak, not you.
+    2. Frame the question so it cannot be answered with a simple "yes/no" or a factual Google search. It must require subjective, personal anecdotes or opinions.
+    3. Prime the pump: Include a very brief (2-3 sentence) personal example or observation in the body to set the context and lower the barrier for others to share.
+    Additional notes:
+    - Ideal length: {Prefered_Length}
+
+  REQUIRED STRUCTURE:
+    - Title: A clear, compelling question that immediately makes the reader think of their own life or experience.
+    - Body: Short context explaining why you are asking, followed by your brief example, ending with a call to action inviting the community's input.
+

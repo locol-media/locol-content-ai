@@ -1,0 +1,142 @@
+
+.button-container {
+  display: flex;
+  justify-content: start; /* Adjust spacing between the divs */
+  align-items: center; /* Aligns items vertically */
+}
+
+.locol-dropdown {
+  width: 300px;
+  height: 30px;
+  background-color: rgb(253, 253, 253);
+  text-align: center;
+  line-height: 30px;
+  margin: 0px;
+  border: 1px solid #f8f6f6;
+  z-index: 4;
+}
+
+
+.locol-single-entry {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 15px;
+  }
+
+  .locol-scrollable-container {
+    width: 300px;
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #f9f9f9;
+    display: none;
+  }
+
+  .locol-entry-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    border-radius: 3px;
+  }
+
+  .locol-entry-container:hover {
+    background-color: #e0e0e0;
+  }
+
+  .locol-entry {
+    flex-grow: 1;
+    cursor: pointer;
+  }
+
+  .locol-entry.selected {
+    background-color: #007bff;
+    color: white;
+    border-radius: 3px;
+  }
+
+  .locol-action-icon {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  .locol-add-entry {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 3px;
+    text-align: center;
+  }
+
+  .locol-add-field-container {
+    display: none;
+    margin-bottom: 10px;
+  }
+
+  .locol-add-field-container input {
+    width: calc(100% - 60px);
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+
+  .locol-add-field-container button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .locol-add-field-container button:hover {
+    background-color: #0056b3;
+  }
+
+  .locol-fancy-button {
+    background: linear-gradient(245deg, #767777, #c9caca);
+    width: 20vh;
+    border: none;
+    color: white;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .locol-fancy-button:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .locol-fancy-button:active {
+    transform: scale(1) translateY(3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .toggle-rag {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: lightgray;
+    border: none;
+    transition: background-color 0.5s ease-in-out;
+}
+.locol-fancy-button.animate-button {
+    background-color: black;
+}

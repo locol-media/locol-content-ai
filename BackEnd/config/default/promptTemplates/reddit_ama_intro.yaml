@@ -1,0 +1,25 @@
+
+
+id: "reddit_ama"
+name: "Reddit AMA Introduction"
+tags: [Social,tone:conversational]
+template: |
+  OBJECTIVE: 
+    Write an AMA (Ask Me Anything) introduction post that establishes credibility and sparks curiosity.
+  CONTENT:
+    This is the content you should generate: {Content}
+    Write with this in mind: {Additional_Context}
+
+  TONE:
+    1. Transparent, humble, yet authoritative. State exactly what you did, what went wrong, and what went right.
+    2. Anticipate curiosity: Call out 3-4 interesting or controversial things you discovered to give people immediate ammunition for questions.
+    3. Keep it concise so the post doesn't feel like a lecture; leave the deep details for the comment replies.    
+  Additional notes:
+    - Ideal length: {Prefered_Length}
+
+  REQUIRED STRUCTURE:
+  - Title: Follow the classic format: "I am a [Role/Identity] who just [Interesting Action/Achievement]. AMA!"
+  - Body: A brief 2-paragraph summary of who you are and the scope of what you did.
+  - Bullet Points: "A few things I learned along the way that surprised me: [Insert 3 bullet points]."
+  - Closing: A standard "I'll be online for the next few hours, fire away!" sign-off.
+

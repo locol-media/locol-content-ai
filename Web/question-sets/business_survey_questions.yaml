@@ -1,0 +1,156 @@
+# Business Content Discovery Survey Questions
+# Organized by category with semantic field keys
+
+name: "Business Survey"
+page_configs_file: "business_survey_page_configs.yaml"
+project_survey: false
+
+basic_info:
+  business_name:
+    question: "What is your business name?"
+    type: text_input
+    help: "Enter your company name"
+    required: true
+  business_description:
+    question: "What does your business do?"
+    type: text_area
+    help: "Brief description of your products/services"
+    required: true
+  industry:
+    question: "What industry are you in?"
+    type: selectbox
+    required: true
+    options:
+      - "Select Industry"
+      - "SaaS/Technology"
+      - "Healthcare"
+      - "Manufacturing"
+      - "Consulting"
+      - "E-commerce"
+      - "Finance"
+      - "Education"
+      - "Real Estate"
+      - "Marketing/Advertising"
+      - "Legal Services"
+      - "Food & Beverage"
+      - "Retail"
+      - "Construction"
+      - "Non-profit"
+      - "Other"
+  industry_other:
+    question: "Please specify your industry:"
+    type: text_input
+    conditional_on:
+      field: industry
+      value: "Other"
+  target_audience:
+    question: "Who is your target audience?"
+    type: text_area
+    help: "Demographics, job titles, company sizes, pain points"
+    required: true
+  services:
+    question: "What are your main products or services?"
+    type: text_area
+    help: "List 3-5 key offerings"
+  unique_value:
+    question: "What makes you different from competitors?"
+    type: text_area
+    help: "Your unique value proposition"
+
+goals_strategy:
+  business_goals:
+    question: "What are your primary business goals?"
+    type: multiselect
+    required: true
+    options:
+      - "Brand Awareness"
+      - "Lead Generation"
+      - "Thought Leadership"
+      - "Customer Retention"
+      - "Sales Growth"
+      - "Market Education"
+      - "Community Building"
+      - "Product Launches"
+      - "Recruitment"
+      - "Investor Relations"
+  audience_interests:
+    question: "What topics does your audience care about most?"
+    type: text_area
+    help: "Industry trends, pain points, solutions they're seeking"
+  current_content:
+    question: "What type of content performs best for you currently?"
+    type: text_area
+    help: "Educational, behind-the-scenes, case studies, industry news, etc."
+  competitors:
+    question: "Who are your main competitors?"
+    type: text_area
+    help: "2-3 companies you compete with directly"
+  influencers:
+    question: "What industry publications, influencers, or thought leaders does your audience follow?"
+    type: text_area
+challenges_market:
+  professional_expertise:
+    question: "What are your primary areas of professional expertise?"
+    type: text_area
+    help: "Skills, knowledge domains, or disciplines where you have deep experience"
+  years_experience:
+    question: "How many years of experience do you have in your field?"
+    type: selectbox
+    options:
+      - "Select Range"
+      - "Less than 1 year"
+      - "1-3 years"
+      - "3-5 years"
+      - "5-10 years"
+      - "10-20 years"
+      - "20+ years"
+  technical_skills:
+    question: "What technical skills, tools, or methodologies do you use regularly?"
+    type: text_area
+    help: "Software, platforms, frameworks, processes, or specialized techniques"
+  credentials:
+    question: "What credentials, certifications, or training do you hold?"
+    type: text_area
+    help: "Degrees, professional certifications, courses, or industry-recognized qualifications"
+  problems_solved:
+    question: "What specific problems have you solved that your customers typically struggle with?"
+    type: text_area
+    help: "Real examples of challenges you help people overcome"
+  unique_approach:
+    question: "Do you have a unique process, framework, or methodology you use?"
+    type: text_area
+    help: "Proprietary methods, signature approaches, or systematic ways of working"
+  industry_mistakes:
+    question: "What common mistakes do you see others in your industry make?"
+    type: text_area
+    help: "Errors you help clients avoid, or pitfalls you've learned to sidestep"
+
+content_preferences:
+  personal_hobbies:
+    question: "What are your personal hobbies or interests outside of work?"
+    type: text_area
+    help: "Activities, passions, or pastimes you pursue in your personal time"
+  active_hobbies:
+    question: "What sports, fitness, or outdoor activities do you enjoy?"
+    type: text_area
+    help: "Exercise routines, sports, hiking, travel, or other physical pursuits"
+  creative_hobbies:
+    question: "Do you have any creative hobbies?"
+    type: text_area
+    help: "Music, art, writing, cooking, crafting, photography, etc."
+  learning_interests:
+    question: "What topics do you love learning about in your personal time?"
+    type: text_area
+    help: "Books, podcasts, documentaries, courses — what pulls your curiosity?"
+  hobby_communities:
+    question: "Are you part of any hobby communities, clubs, or groups?"
+    type: text_area
+    help: "Online or local communities centered around your interests"
+  hobbies_and_business:
+    question: "Have any of your hobbies influenced how you run your business or think about your work?"
+    type: text_area
+    help: "Lessons, skills, or perspectives from personal interests that cross over into your professional life"
+  audience_overlap:
+    question: "Which of your hobbies or interests do you think your target audience would relate to?"
+    type: text_area
+    help: "Shared interests that could strengthen your connection with customers"

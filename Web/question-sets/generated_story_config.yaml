@@ -1,0 +1,7 @@
+# Page configurations for Generated Story question set
+
+generated_story:
+  title: "📝 Generated Story"
+  emoji: "📝"
+  description: "Summary of your business background and the skill content for this project."
+  order: 1

@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+.pytest_cache/
+# pytest-playwright output: screenshots, videos and traces from failed runs
+test-results/

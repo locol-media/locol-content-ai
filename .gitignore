@@ -1,0 +1,23 @@
+# JWT signing key pair (ops-managed via scripts/generate-jwt-keys.ps1|.sh; never commit)
+/keys/
+*.pem
+*.key
+
+# Secrets / environment files - never commit
+.env
+.env.*
+credentials.json
+
+# SQLite databases (contain user data; bootstrapped via scripts/create_user_database.py
+# or provisioned by persistent volumes in deployment - never committed)
+*.sqlite*
+/temp/
+
+# Private, environment-specific deployment manifests (real host/registry/config).
+# The published, parameterized templates live in k8s/ instead.
+/local/
+
+# Bearer scan output (regenerated on each run by scripts/run-bearer-scan.ps1|.sh).
+# bearer.yml (scan scope) and bearer.ignore (triaged false positives) ARE committed.
+bearer.log
+scan.log

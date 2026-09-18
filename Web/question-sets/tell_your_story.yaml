@@ -1,0 +1,45 @@
+# Tell Your Story Question Set
+# Simple two-question set for business storytelling
+
+# Question set configuration
+name: "Tell your story"
+page_configs_file: "tell_your_story_config.yaml"
+
+business_story:
+  q1:
+    question: "How did you start the business? Was this a problem you faced personally"
+    help: "Share the origin story of your business - what inspired you, what problem you saw, or what opportunity you discovered."
+    llm_prompt: "use this information as background for the question"
+  q2:
+    question: "Who is your target audience and why did you select them?"
+    help: "Describe your ideal customers and explain the reasoning behind choosing this specific audience."
+  q3:
+    question: "What was the moment you decided this was worth pursuing seriously?"
+    help: "Add a human touch to the story."
+    llm_prompt: "use this information as background for the question"
+  q4:
+    question: "Why hadn't this been solved well before you came along?"
+    help: "Start explaining why your solution or approach is unique." 
+  q5:
+    question: "What are the challenges for your target audience that this solve? Provide a list of the challenges in detail."
+    help: "Expand on the benefits of your product."
+    llm_prompt: "use this information as background for the question"
+  q6:
+    question: "What surprised you when you started talking to potential users?" 
+    help: "Add reasons why people might not look at your product, but they should."
+  q7:
+    question: "Are there specific ideas you would like seperate posts to cover? Please provide a list." 
+    help: "Add topics you would specifically like to include."
+    llm_prompt: "Generate an item for each idea on this list. Treat each paragraph as one item. The first sentence is a suggested title."
+  q8:
+    question: "The available channels are LinkedIn,Reddit, and Facebook. Please specify which channels you would like to use for this project." 
+    help: "The following are the channels to be used for this campaign."
+    llm_prompt: "The following are the channels to be used for this campaign. Please only generate content for these channels."
+
+additional_instructions: "Use this list of topics and create a seperate item for each topic."
+
+
+
+
+
+

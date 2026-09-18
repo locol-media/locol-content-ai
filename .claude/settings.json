@@ -1,0 +1,24 @@
+{
+  "enabledMcpjsonServers": ["playwright"],
+  "permissions": {
+    "allow": [
+      "Bash(python3 -m py_compile *.py)",
+      "Bash(Select-Object Name)",
+      "Bash(python -c \"import fastapi; print\\(fastapi.__version__\\)\")",
+      "Bash(mkdir -p /tmp_test_db_verify)",
+      "Bash(python -)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(python -c \"import playwright; print\\('playwright available'\\)\")",
+      "Bash(export PYTHONPATH=\"$BACKEND_SRC\")",
+      "Bash(echo \"started pid $!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8123/docs)",
+      "PowerShell($env:GIT_PAGER='cat'; git log --oneline --all -- BackEnd/src/quill_op.py 2>&1 | Out-String)",
+      "PowerShell($env:GIT_PAGER='cat'; git log --oneline --all -- BackEnd/src/rag_run.py 2>&1 | Out-String)",
+      "PowerShell(git log --oneline --all -- BackEnd/src/quill_op.py > \"$env:TEMP\\\\quill_log.txt\" 2>&1; Write-Output \"done\")",
+      "PowerShell(git log -1 --oneline 2>&1 | Out-String; Write-Output \"EXITCODE:$LASTEXITCODE\")",
+      "PowerShell(git log --oneline -- BackEnd/src/quill_op.py 2>&1 | Out-String; Write-Output \"EXITCODE:$LASTEXITCODE\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

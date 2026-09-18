@@ -1,0 +1,22 @@
+[project]
+name = "web"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "cryptography>=45.0.7",
+    "datetime>=5.5",
+    # jwcrypto signs the session token and encrypts it to BackEnd's EC public key
+    # (RS256 inside ECDH-ES+A256KW / A256GCM). It replaced authlib + PyJWT - see the
+    # longer note in BackEnd/pyproject.toml. Keep the floor in step with that file:
+    # both ends of one token format have to agree.
+    "jwcrypto>=1.6.0",
+    "pydantic>=2.11.7",
+    "pyyaml>=6.0.2",
+    "requests>=2.32.5",
+    "streamlit>=1.49.1",
+    "streamlit-survey>=1.0.2",
+    "typing>=3.10.0.0",
+    "uuid-utils>=0.11.0",
+]

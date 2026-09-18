@@ -1,0 +1,23 @@
+# Cluster-internal address for the proxy:
+#   http://bifrost.locol-ai.svc.cluster.local:8080
+#
+# ClusterIP by design — this Service is intentionally NOT fronted by an Ingress.
+# Port 8080 also serves the admin web UI, which would leak the provider
+# configuration if published. Use `kubectl -n locol-ai port-forward svc/bifrost
+# 8080:8080` to reach the UI.
+apiVersion: v1
+kind: Service
+metadata:
+  name: bifrost
+  namespace: locol-ai
+  labels:
+    app: bifrost
+spec:
+  selector:
+    app: bifrost
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  type: ClusterIP

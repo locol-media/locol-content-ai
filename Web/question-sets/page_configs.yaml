@@ -1,0 +1,27 @@
+# Page configuration for strategic survey sections
+# Defines the structure and metadata for each category
+
+emotional_motivation:
+  title: "💝 Emotional Connection & Motivation"
+  description: "Uncover the emotional drivers behind your product and customer relationships"
+  emoji: "💝"
+
+positioning_angles:
+  title: "🎯 Untapped Angles & Positioning"
+  description: "Discover unique positioning opportunities your competitors aren't using"
+  emoji: "🎯"
+
+audience_insights:
+  title: "👥 Audience Insights & Expansion"
+  description: "Explore unexpected audience segments and deeper customer understanding"
+  emoji: "👥"
+
+cultural_timing:
+  title: "⏰ Cultural Moments & Timing"
+  description: "Identify timing opportunities and cultural moments for maximum impact"
+  emoji: "⏰"
+
+differentiators:
+  title: "✨ Unique Differentiators"
+  description: "Uncover your secret advantages and contrarian opportunities"
+  emoji: "✨"

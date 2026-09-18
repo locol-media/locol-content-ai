@@ -1,0 +1,484 @@
+- generic [ref=f2e2]:
+  - generic [ref=f2e158]:
+    - paragraph [ref=f2e162]:
+      - strong [ref=f2e163]: 🏠 Home
+    - button [ref=f2e166] [cursor=pointer]:
+      - paragraph [ref=f2e168]: 🏠 Home
+    - generic [ref=f2e170]:
+      - paragraph [ref=f2e176]:
+        - strong [ref=f2e177]: 📝 Business Survey
+      - button [ref=f2e185] [cursor=pointer]:
+        - paragraph [ref=f2e187]: ▶
+    - generic [ref=f2e189]:
+      - paragraph [ref=f2e195]:
+        - strong [ref=f2e196]: 📁 Campaign Projects
+      - button [ref=f2e204] [cursor=pointer]:
+        - paragraph [ref=f2e206]: ➕
+      - button [ref=f2e214] [cursor=pointer]:
+        - paragraph [ref=f2e216]: 🔄
+    - generic [ref=f2e218]:
+      - button [ref=f2e385] [cursor=pointer]:
+        - paragraph [ref=f2e387]: ▼
+      - button [ref=f2e233] [cursor=pointer]:
+        - paragraph [ref=f2e235]: The first thing I ask a stuck founder isn't 'who is your audience?' It's 'what do you do with your hands?'
+    - button [ref=f2e390] [cursor=pointer]:
+      - paragraph [ref=f2e392]: "💡 The intro: I’m building an AI tool that turns expertise into Reddit posts — and it will never hit publish for me"
+    - button [ref=f2e401] [cursor=pointer]:
+      - paragraph [ref=f2e403]: 💡 Your hobby is not a distraction. It’s the post your customers actually want to read.
+    - button [ref=f2e412] [cursor=pointer]:
+      - paragraph [ref=f2e414]: 💡 What 40 repair-log posts taught me about getting upvoted in technical subreddits
+    - button [ref=f2e423] [cursor=pointer]:
+      - paragraph [ref=f2e425]: 💡 The self-promotion line is real. Here’s the test I use before I post to a subreddit.
+    - button [ref=f2e434] [cursor=pointer]:
+      - paragraph [ref=f2e436]: 💡 One story can become a five-post series — without repeating yourself. Here’s the breakdown.
+    - button [ref=f2e445] [cursor=pointer]:
+      - paragraph [ref=f2e447]: 💡 Every good technical post has a “before photo” — here’s how to write one in words
+    - button [ref=f2e456] [cursor=pointer]:
+      - paragraph [ref=f2e458]: "💡 AMA: I’m making an AI writing tool that deliberately doesn’t sound like AI. Ask me about the voice profiles and the human-review step."
+    - button [ref=f2e467] [cursor=pointer]:
+      - paragraph [ref=f2e469]: "💡 How to make an AI draft sound like you, not like ChatGPT: the only style test that matters"
+    - button [ref=f2e478] [cursor=pointer]:
+      - paragraph [ref=f2e480]: "💡 Getting the first 100 users without a launch post: I want to pull back the curtain on the plan"
+    - button [ref=f2e489] [cursor=pointer]:
+      - paragraph [ref=f2e491]: 💡 I tried writing about a problem for an hour and then went for a walk — the walk solved it. Notes on debugging and blank pages.
+    - button [ref=f2e500] [cursor=pointer]:
+      - paragraph [ref=f2e502]: "💡 The launch post I’m planning has no link in it: here’s why"
+    - button [ref=f2e511] [cursor=pointer]:
+      - paragraph [ref=f2e513]: 💡 QA idea box probe 15:41:38 (edited)
+    - generic [ref=f2e515]:
+      - button [ref=f2e523] [cursor=pointer]:
+        - paragraph [ref=f2e525]: ▶
+      - button [ref=f2e530] [cursor=pointer]:
+        - paragraph [ref=f2e532]: "My one-hour rule: if I can't crack the opening after sixty minutes, I take the blank page outside"
+    - paragraph [ref=f2e536]:
+      - strong [ref=f2e537]: ⚙️ Settings and Tools
+    - button [ref=f2e540] [cursor=pointer]:
+      - paragraph [ref=f2e542]: ⚙️ Config Manager
+    - button [ref=f2e267] [cursor=pointer]:
+      - paragraph [ref=f2e269]: 🎤 Find your voice
+  - generic [ref=f2e3]:
+    - banner [ref=f2e6]:
+      - generic [ref=f2e9]:
+        - generic [ref=f2e1681]:
+          - img "Running..." [ref=f2e1682]
+          - button "Stop" [ref=f2e1687] [cursor=pointer]
+        - button "Deploy" [ref=f2e19] [cursor=pointer]
+        - button [ref=f2e23] [cursor=pointer]
+    - generic [ref=f2e27]:
+      - heading "🎯 The first thing I ask a stuck founder isn't 'who is your audience?' It's 'what do you do with your hands?'" [level=1] [ref=f2e555]
+      - separator [ref=f2e560]
+      - generic [ref=f2e562]:
+        - generic [ref=f2e563]: 🎯 Project Survey
+        - button [ref=f2e573] [cursor=pointer]:
+          - paragraph [ref=f2e575]: ✏️ Edit Project Survey
+      - generic [ref=f2e1689]:
+        - tablist [ref=f2e1691]:
+          - tab [selected] [ref=f2e1692] [cursor=pointer]:
+            - paragraph [ref=f2e1694]: 📝 Generated Story
+        - tabpanel "📝 Generated Story" [ref=f2e1697]:
+          - generic [ref=f2e1698]:
+            - heading "📝 Generated Story" [level=3] [ref=f2e1703]
+            - group [ref=f2e1707]:
+              - generic "keyboard_arrow_right 💡 Business Survey Summary" [ref=f2e1708] [cursor=pointer]:
+                - generic [ref=f2e1709]:
+                  - generic [ref=f2e1710]: keyboard_arrow_right
+                  - paragraph [ref=f2e1713]: 💡 Business Survey Summary
+            - group [ref=f2e1716]:
+              - generic "keyboard_arrow_right 💡 What is the skill content that we are addressing in this project" [ref=f2e1717] [cursor=pointer]:
+                - generic [ref=f2e1718]:
+                  - generic [ref=f2e1719]: keyboard_arrow_right
+                  - paragraph [ref=f2e1722]: 💡 What is the skill content that we are addressing in this project
+      - separator [ref=f2e1725]
+      - generic [ref=f2e1727]:
+        - paragraph [ref=f2e1733]: Send your strategic insights to the AI brainstorm engine for campaign development recommendations.
+        - button [ref=f2e1738] [cursor=pointer]:
+          - paragraph [ref=f2e1740]: 🚀 Generate Strategic Campaigns
+      - separator [ref=f2e637]
+      - generic [ref=f2e1741]: 🎯 Project Post Ideas
+      - alert [ref=f2e1746]:
+        - paragraph [ref=f2e1751]: Restored from database
+      - group [ref=f2e1754]:
+        - generic "keyboard_arrow_right ➕ Add Campaign Idea Manually" [ref=f2e1755] [cursor=pointer]:
+          - generic [ref=f2e1756]:
+            - generic [ref=f2e1757]: keyboard_arrow_right
+            - paragraph [ref=f2e1760]: ➕ Add Campaign Idea Manually
+      - generic [ref=f2e1761]:
+        - paragraph [ref=f2e1767]:
+          - strong [ref=f2e1768]: "The intro: I’m building an AI tool that turns expertise into Reddit posts — and it will never hit publish for me"
+        - button [ref=f2e1776] [cursor=pointer]:
+          - paragraph [ref=f2e1778]: ✏️ Edit
+        - generic [ref=f2e1783] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e1788]: Generate Content
+      - group [ref=f2e1791]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e1792] [cursor=pointer]:
+          - generic [ref=f2e1793]:
+            - generic [ref=f2e1794]: keyboard_arrow_down
+            - paragraph [ref=f2e1797]: View Details
+        - generic [ref=f2e1799]:
+          - paragraph [ref=f2e1803]:
+            - strong [ref=f2e1804]: "Description:"
+          - paragraph [ref=f2e1808]: "A personal, honest series kickoff for r/SaaS or r/Startups. Open with the contradiction: an AI writing tool whose founder refuses to let it publish. Explain why communities reward people and punish brands, why the product stops at a finished draft, and what I plan to share in the series: real drafts, including the ones that flop. End with a question inviting readers to tell me which part of the process they want to see dissected first."
+          - generic [ref=f2e1810]:
+            - generic [ref=f2e1812]:
+              - paragraph [ref=f2e1816]:
+                - strong [ref=f2e1817]: "Content Type:"
+                - text: Text post (series intro)
+              - paragraph [ref=f2e1821]:
+                - strong [ref=f2e1822]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e1824]:
+              - paragraph [ref=f2e1828]:
+                - strong [ref=f2e1829]: "Goal:"
+              - paragraph [ref=f2e1833]: Brand Awareness / Community Building
+      - separator [ref=f2e1837]
+      - generic [ref=f2e1839]:
+        - paragraph [ref=f2e1845]:
+          - strong [ref=f2e1846]: Your hobby is not a distraction. It’s the post your customers actually want to read.
+        - button [ref=f2e1854] [cursor=pointer]:
+          - paragraph [ref=f2e1856]: ✏️ Edit
+        - generic [ref=f2e1861] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e1866]: Generate Content
+      - group [ref=f2e1869]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e1870] [cursor=pointer]:
+          - generic [ref=f2e1871]:
+            - generic [ref=f2e1872]: keyboard_arrow_down
+            - paragraph [ref=f2e1875]: View Details
+        - generic [ref=f2e1877]:
+          - paragraph [ref=f2e1881]:
+            - strong [ref=f2e1882]: "Description:"
+          - paragraph [ref=f2e1886]: "A how-to framed as a confession: restoring old mechanical keyboards taught me how to write about a software bug. Walk through the shift from “what do I sell?” to “what do I know and love?” with the exact opening questions I ask in the survey. Show how a niche hobby detail like seized brake calipers becomes the hook for a business lesson — no product pitch attached."
+          - generic [ref=f2e1888]:
+            - generic [ref=f2e1890]:
+              - paragraph [ref=f2e1894]:
+                - strong [ref=f2e1895]: "Content Type:"
+                - text: How-to / Text post
+              - paragraph [ref=f2e1899]:
+                - strong [ref=f2e1900]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e1902]:
+              - paragraph [ref=f2e1906]:
+                - strong [ref=f2e1907]: "Goal:"
+              - paragraph [ref=f2e1911]: Thought Leadership
+      - separator [ref=f2e1915]
+      - generic [ref=f2e1917]:
+        - paragraph [ref=f2e1923]:
+          - strong [ref=f2e1924]: What 40 repair-log posts taught me about getting upvoted in technical subreddits
+        - button [ref=f2e1932] [cursor=pointer]:
+          - paragraph [ref=f2e1934]: ✏️ Edit
+        - generic [ref=f2e1939] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e1944]: Generate Content
+      - group [ref=f2e1947]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e1948] [cursor=pointer]:
+          - generic [ref=f2e1949]:
+            - generic [ref=f2e1950]: keyboard_arrow_down
+            - paragraph [ref=f2e1953]: View Details
+        - generic [ref=f2e1955]:
+          - paragraph [ref=f2e1959]:
+            - strong [ref=f2e1960]: "Description:"
+          - paragraph [ref=f2e1964]: "Pull my own keyboard restoration logs and compare the ones that got replies with the ones that got ignored. Look at concrete signals: before/after photos, specific numbers, where the admission of failure appears, and whether the post asks for help or announces a result. Translate that into a checklist for technical and founder posts: show the mess, give real metrics, admit what you got wrong."
+          - generic [ref=f2e1966]:
+            - generic [ref=f2e1968]:
+              - paragraph [ref=f2e1972]:
+                - strong [ref=f2e1973]: "Content Type:"
+                - text: Text post / Data breakdown
+              - paragraph [ref=f2e1977]:
+                - strong [ref=f2e1978]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e1980]:
+              - paragraph [ref=f2e1984]:
+                - strong [ref=f2e1985]: "Goal:"
+              - paragraph [ref=f2e1989]: Thought Leadership / Community Building
+      - separator [ref=f2e1993]
+      - generic [ref=f2e1995]:
+        - paragraph [ref=f2e2001]:
+          - strong [ref=f2e2002]: The self-promotion line is real. Here’s the test I use before I post to a subreddit.
+        - button [ref=f2e2010] [cursor=pointer]:
+          - paragraph [ref=f2e2012]: ✏️ Edit
+        - generic [ref=f2e2017] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2022]: Generate Content
+      - group [ref=f2e2025]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2026] [cursor=pointer]:
+          - generic [ref=f2e2027]:
+            - generic [ref=f2e2028]: keyboard_arrow_down
+            - paragraph [ref=f2e2031]: View Details
+        - generic [ref=f2e2033]:
+          - paragraph [ref=f2e2037]:
+            - strong [ref=f2e2038]: "Description:"
+          - paragraph [ref=f2e2042]: "A practical post for people who have been burned by downvotes. Share the three-question filter that has to pass before I submit anything: take out all links; does the post still hold up? Is the first sentence about the reader, not me? Could I post this with my company name removed? Include two real examples — one that reads like an ad and one that reads like a person — and explain the exact line that makes the difference."
+          - generic [ref=f2e2044]:
+            - generic [ref=f2e2046]:
+              - paragraph [ref=f2e2050]:
+                - strong [ref=f2e2051]: "Content Type:"
+                - text: Text post / Guide
+              - paragraph [ref=f2e2055]:
+                - strong [ref=f2e2056]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2058]:
+              - paragraph [ref=f2e2062]:
+                - strong [ref=f2e2063]: "Goal:"
+              - paragraph [ref=f2e2067]: Community Building / Thought Leadership
+      - separator [ref=f2e2071]
+      - generic [ref=f2e2073]:
+        - paragraph [ref=f2e2079]:
+          - strong [ref=f2e2080]: One story can become a five-post series — without repeating yourself. Here’s the breakdown.
+        - button [ref=f2e2088] [cursor=pointer]:
+          - paragraph [ref=f2e2090]: ✏️ Edit
+        - generic [ref=f2e2095] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2100]: Generate Content
+      - group [ref=f2e2103]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2104] [cursor=pointer]:
+          - generic [ref=f2e2105]:
+            - generic [ref=f2e2106]: keyboard_arrow_down
+            - paragraph [ref=f2e2109]: View Details
+        - generic [ref=f2e2111]:
+          - paragraph [ref=f2e2115]:
+            - strong [ref=f2e2116]: "Description:"
+          - paragraph [ref=f2e2120]: "Take one rich lesson from a founder’s life (a restoration project, a broken deploy, a bad pricing decision) and show how to split it into five separate Reddit posts: 1) the hook that sets up the story, 2) the wrong path you tried first, 3) the thing that actually worked, 4) the edge cases no one mentions, 5) the open question you still haven’t solved. Emphasize that each post stands alone and the first instalment does nothing but set up the rest."
+          - generic [ref=f2e2122]:
+            - generic [ref=f2e2124]:
+              - paragraph [ref=f2e2128]:
+                - strong [ref=f2e2129]: "Content Type:"
+                - text: How-to / Text post
+              - paragraph [ref=f2e2133]:
+                - strong [ref=f2e2134]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2136]:
+              - paragraph [ref=f2e2140]:
+                - strong [ref=f2e2141]: "Goal:"
+              - paragraph [ref=f2e2145]: Thought Leadership
+      - separator [ref=f2e2149]
+      - generic [ref=f2e2151]:
+        - paragraph [ref=f2e2157]:
+          - strong [ref=f2e2158]: Every good technical post has a “before photo” — here’s how to write one in words
+        - button [ref=f2e2166] [cursor=pointer]:
+          - paragraph [ref=f2e2168]: ✏️ Edit
+        - generic [ref=f2e2173] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2178]: Generate Content
+      - group [ref=f2e2181]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2182] [cursor=pointer]:
+          - generic [ref=f2e2183]:
+            - generic [ref=f2e2184]: keyboard_arrow_down
+            - paragraph [ref=f2e2187]: View Details
+        - generic [ref=f2e2189]:
+          - paragraph [ref=f2e2193]:
+            - strong [ref=f2e2194]: "Description:"
+          - paragraph [ref=f2e2198]: "Draw from restoration photography to explain narrative structure: the before shot is the hook, not the reveal. Show how the “before” of a developer story works the same way — the buggy state, the missing feature, the embarrassing assumption. Give examples of opening sentences that create the photo in a reader’s mind in two lines, and explain why most posts die because they start at the shine instead of the grime."
+          - generic [ref=f2e2200]:
+            - generic [ref=f2e2202]:
+              - paragraph [ref=f2e2206]:
+                - strong [ref=f2e2207]: "Content Type:"
+                - text: How-to / Story
+              - paragraph [ref=f2e2211]:
+                - strong [ref=f2e2212]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2214]:
+              - paragraph [ref=f2e2218]:
+                - strong [ref=f2e2219]: "Goal:"
+              - paragraph [ref=f2e2223]: Thought Leadership
+      - separator [ref=f2e2227]
+      - generic [ref=f2e2229]:
+        - paragraph [ref=f2e2235]:
+          - strong [ref=f2e2236]: "AMA: I’m making an AI writing tool that deliberately doesn’t sound like AI. Ask me about the voice profiles and the human-review step."
+        - button [ref=f2e2244] [cursor=pointer]:
+          - paragraph [ref=f2e2246]: ✏️ Edit
+        - generic [ref=f2e2251] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2256]: Generate Content
+      - group [ref=f2e2259]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2260] [cursor=pointer]:
+          - generic [ref=f2e2261]:
+            - generic [ref=f2e2262]: keyboard_arrow_down
+            - paragraph [ref=f2e2265]: View Details
+        - generic [ref=f2e2267]:
+          - paragraph [ref=f2e2271]:
+            - strong [ref=f2e2272]: "Description:"
+          - paragraph [ref=f2e2276]: "An AMA aimed at the technical side of the audience. Talk openly about the architecture: one SQLite database per user, Fernet-encrypted API keys, prompt design that keeps output structured, and the review step that always sits between model output and a finished post. Invite founders to ask about the failures, the guardrails, and where I think AI writing tools are still untrustworthy. The goal is to build trust through transparency."
+          - generic [ref=f2e2278]:
+            - generic [ref=f2e2280]:
+              - paragraph [ref=f2e2284]:
+                - strong [ref=f2e2285]: "Content Type:"
+                - text: AMA
+              - paragraph [ref=f2e2289]:
+                - strong [ref=f2e2290]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2292]:
+              - paragraph [ref=f2e2296]:
+                - strong [ref=f2e2297]: "Goal:"
+              - paragraph [ref=f2e2301]: Brand Awareness / Thought Leadership
+      - separator [ref=f2e2305]
+      - generic [ref=f2e2307]:
+        - paragraph [ref=f2e2313]:
+          - strong [ref=f2e2314]: "How to make an AI draft sound like you, not like ChatGPT: the only style test that matters"
+        - button [ref=f2e2322] [cursor=pointer]:
+          - paragraph [ref=f2e2324]: ✏️ Edit
+        - generic [ref=f2e2329] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2334]: Generate Content
+      - group [ref=f2e2337]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2338] [cursor=pointer]:
+          - generic [ref=f2e2339]:
+            - generic [ref=f2e2340]: keyboard_arrow_down
+            - paragraph [ref=f2e2343]: View Details
+        - generic [ref=f2e2345]:
+          - paragraph [ref=f2e2349]:
+            - strong [ref=f2e2350]: "Description:"
+          - paragraph [ref=f2e2354]: "A guide built from the idea of a voice profile. Show one paragraph written three ways: a generic AI voice, a safe brand voice, and a real human voice. Explain why a voice profile is a piece of writing, not a setting, and share the practical test: read the draft aloud and ask, “Would my regulars know I wrote this, or would they block me?” Include rewrite commands that tune sentence length, jargon, and honesty without turning the text into LinkedIn mush."
+          - generic [ref=f2e2356]:
+            - generic [ref=f2e2358]:
+              - paragraph [ref=f2e2362]:
+                - strong [ref=f2e2363]: "Content Type:"
+                - text: How-to / Text post
+              - paragraph [ref=f2e2367]:
+                - strong [ref=f2e2368]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2370]:
+              - paragraph [ref=f2e2374]:
+                - strong [ref=f2e2375]: "Goal:"
+              - paragraph [ref=f2e2379]: Thought Leadership / Brand Awareness
+      - separator [ref=f2e2383]
+      - generic [ref=f2e2385]:
+        - paragraph [ref=f2e2391]:
+          - strong [ref=f2e2392]: "Getting the first 100 users without a launch post: I want to pull back the curtain on the plan"
+        - button [ref=f2e2400] [cursor=pointer]:
+          - paragraph [ref=f2e2402]: ✏️ Edit
+        - generic [ref=f2e2407] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2412]: Generate Content
+      - group [ref=f2e2415]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2416] [cursor=pointer]:
+          - generic [ref=f2e2417]:
+            - generic [ref=f2e2418]: keyboard_arrow_down
+            - paragraph [ref=f2e2421]: View Details
+        - generic [ref=f2e2423]:
+          - paragraph [ref=f2e2427]:
+            - strong [ref=f2e2428]: "Description:"
+          - paragraph [ref=f2e2432]: A strategy post for founders who are tired of launch-spam culture. Publicly lay out the plan to earn the first users by posting genuinely useful things in communities I actually belong to, replying more than posting, and treating the product as the answer to a question someone asks — not the point of the post. Invite r/startups and r/Entrepreneur to poke holes and share what worked for them before they had a marketing budget.
+          - generic [ref=f2e2434]:
+            - generic [ref=f2e2436]:
+              - paragraph [ref=f2e2440]:
+                - strong [ref=f2e2441]: "Content Type:"
+                - text: Discussion / Strategy
+              - paragraph [ref=f2e2445]:
+                - strong [ref=f2e2446]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2448]:
+              - paragraph [ref=f2e2452]:
+                - strong [ref=f2e2453]: "Goal:"
+              - paragraph [ref=f2e2457]: Product Launch / Community Building
+      - separator [ref=f2e2461]
+      - generic [ref=f2e2463]:
+        - paragraph [ref=f2e2469]:
+          - strong [ref=f2e2470]: I tried writing about a problem for an hour and then went for a walk — the walk solved it. Notes on debugging and blank pages.
+        - button [ref=f2e2478] [cursor=pointer]:
+          - paragraph [ref=f2e2480]: ✏️ Edit
+        - generic [ref=f2e2485] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2490]: Generate Content
+      - group [ref=f2e2493]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2494] [cursor=pointer]:
+          - generic [ref=f2e2495]:
+            - generic [ref=f2e2496]: keyboard_arrow_down
+            - paragraph [ref=f2e2499]: View Details
+        - generic [ref=f2e2501]:
+          - paragraph [ref=f2e2505]:
+            - strong [ref=f2e2506]: "Description:"
+          - paragraph [ref=f2e2510]: "A war story about the simple practice of stepping away from a problem and how it applies to both code and writing. Connect it to the target audience’s pain: the blank page usually means the story isn’t found yet, not that you have nothing to say. Share three signals that tell you when to stop staring and go outside, and explain why the ideas that come back are usually the ones worth posting."
+          - generic [ref=f2e2512]:
+            - generic [ref=f2e2514]:
+              - paragraph [ref=f2e2518]:
+                - strong [ref=f2e2519]: "Content Type:"
+                - text: Story / Text post
+              - paragraph [ref=f2e2523]:
+                - strong [ref=f2e2524]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2526]:
+              - paragraph [ref=f2e2530]:
+                - strong [ref=f2e2531]: "Goal:"
+              - paragraph [ref=f2e2535]: Thought Leadership / Community Building
+      - separator [ref=f2e2539]
+      - generic [ref=f2e2541]:
+        - paragraph [ref=f2e2547]:
+          - strong [ref=f2e2548]: "The launch post I’m planning has no link in it: here’s why"
+        - button [ref=f2e2556] [cursor=pointer]:
+          - paragraph [ref=f2e2558]: ✏️ Edit
+        - generic [ref=f2e2563] [cursor=pointer]:
+          - checkbox "Generate Content"
+          - paragraph [ref=f2e2568]: Generate Content
+      - group [ref=f2e2571]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2572] [cursor=pointer]:
+          - generic [ref=f2e2573]:
+            - generic [ref=f2e2574]: keyboard_arrow_down
+            - paragraph [ref=f2e2577]: View Details
+        - generic [ref=f2e2579]:
+          - paragraph [ref=f2e2583]:
+            - strong [ref=f2e2584]: "Description:"
+          - paragraph [ref=f2e2588]: A product-launch content idea that practices what the product preaches. Instead of an announcement with a “Try it now” button, publish a story about building Locol AI’s final human-review step and nearly automating it away. Mention the product as the subject of the story, not the destination, and offer only a single thread for anyone who wants to know more. This gives Reddit a genuine human moment while still creating launch curiosity.
+          - generic [ref=f2e2590]:
+            - generic [ref=f2e2592]:
+              - paragraph [ref=f2e2596]:
+                - strong [ref=f2e2597]: "Content Type:"
+                - text: Text post / Story
+              - paragraph [ref=f2e2601]:
+                - strong [ref=f2e2602]: "Platform:"
+                - text: Reddit
+            - generic [ref=f2e2604]:
+              - paragraph [ref=f2e2608]:
+                - strong [ref=f2e2609]: "Goal:"
+              - paragraph [ref=f2e2613]: Product Launch / Brand Awareness
+      - separator [ref=f2e2617]
+      - generic [ref=f2e2619]:
+        - paragraph [ref=f2e2625]:
+          - strong [ref=f2e2626]: QA idea box probe 15:41:38 (edited)
+        - button [ref=f2e2634] [cursor=pointer]:
+          - paragraph [ref=f2e2636]: ✏️ Edit
+        - generic [ref=f2e2641] [cursor=pointer]:
+          - checkbox "Generate Content" [active]
+          - paragraph [ref=f2e2646]: Generate Content
+      - group [ref=f2e2649]:
+        - generic "keyboard_arrow_down View Details" [ref=f2e2650] [cursor=pointer]:
+          - generic [ref=f2e2651]:
+            - generic [ref=f2e2652]: keyboard_arrow_down
+            - paragraph [ref=f2e2655]: View Details
+        - generic [ref=f2e2657]:
+          - paragraph [ref=f2e2661]:
+            - strong [ref=f2e2662]: "Description:"
+          - paragraph [ref=f2e2666]: Edited by the same script, to prove Save Changes persists.
+          - generic [ref=f2e2668]:
+            - generic [ref=f2e2670]:
+              - paragraph [ref=f2e2674]:
+                - strong [ref=f2e2675]: "Content Type:"
+                - text: Case Study
+              - paragraph [ref=f2e2679]:
+                - strong [ref=f2e2680]: "Platform:"
+                - text: Reddit (edited)
+            - generic [ref=f2e2682]:
+              - paragraph [ref=f2e2686]:
+                - strong [ref=f2e2687]: "Goal:"
+              - paragraph [ref=f2e2691]: Thought Leadership
+      - separator [ref=f2e2695]
+      - separator [ref=f2e2699]
+      - heading "🚀 Content Generation" [level=3] [ref=f2e2701]
+      - alert [ref=f2e2704]:
+        - paragraph [ref=f2e2709]: ✅ 1 idea(s) selected for content generation
+      - generic [ref=f2e1633]:
+        - paragraph [ref=f2e1636]: 🎤 Voice
+        - generic [ref=f2e1644]:
+          - generic [ref=f2e1645]:
+            - generic [ref=f2e1646]: — No voice —
+            - combobox "Selected — No voice —. 🎤 Voice" [ref=f2e1648]
+          - img "open" [ref=f2e1650] [cursor=pointer]
+      - generic [ref=f2e2711]:
+        - button [ref=f2e2716] [cursor=pointer]:
+          - paragraph [ref=f2e2718]: 🔄 Refresh Content
+        - button [ref=f2e2723] [cursor=pointer]:
+          - paragraph [ref=f2e2725]: 🚀 Generate Content
+        - button [ref=f2e2730] [cursor=pointer]:
+          - paragraph [ref=f2e2732]: 🗑️ Clear Selection
+      - button [ref=f2e1677] [cursor=pointer]:
+        - paragraph [ref=f2e1679]: 🗑️ Clear Strategic Response

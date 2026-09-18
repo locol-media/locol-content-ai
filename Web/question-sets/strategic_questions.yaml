@@ -1,0 +1,73 @@
+# Strategic Campaign Discovery Questions
+# Organized by category with generic keys
+
+# Page configuration file to use for this questions set
+name: "Default Question Set"
+page_configs_file: "page_configs.yaml"
+
+emotional_motivation:
+  q1:
+    question: "What specific problem were you trying to solve when you first created this product?"
+    help: "Think about the original pain point or frustration that motivated you to create this solution."
+  q2:
+    question: "What's the most surprising way you've seen customers use your product?"
+    help: "Describe an unexpected use case that made you see your product differently."
+  q3:
+    question: "Can you share a customer story that gave you goosebumps?"
+    help: "Tell us about a moment when you realized the true impact of your product on someone's life."
+  q4:
+    question: "What would your customers' lives look like without this product?"
+    help: "Paint a picture of the challenges, frustrations, or missed opportunities they'd face."
+
+positioning_angles:
+  q5:
+    question: "What's one thing about your product that competitors never talk about?"
+    help: "Think about features, benefits, or qualities that only you highlight or possess."
+  q6:
+    question: "If you had to sell this to your biggest skeptic, what would you lead with?"
+    help: "What's your strongest, most irrefutable argument for someone who doubts your product?"
+  q7:
+    question: "What assumptions do people make about your product that are completely wrong?"
+    help: "What misconceptions do prospects have that you constantly need to correct?"
+  q8:
+    question: "How do you use your own product differently than you tell others to use it?"
+    help: "What insider tricks or unconventional methods do you employ that customers don't know about?"
+
+audience_insights:
+  q9:
+    question: "Who's buying your product that you never expected would?"
+    help: "Describe surprising customer segments or demographics that have emerged."
+  q10:
+    question: "What do your customers talk about when they're not talking about your product?"
+    help: "What other topics, interests, or challenges occupy their minds and conversations?"
+  q11:
+    question: "If you could eavesdrop on your customers at dinner, what would they be complaining about?"
+    help: "What daily frustrations or bigger life challenges do they face outside of what your product solves?"
+  q12:
+    question: "What other brands or products do your customers obsess over?"
+    help: "What companies, products, or experiences do they love and talk about frequently?"
+
+cultural_timing:
+  q13:
+    question: "What's happening in your customers' world right now that they're stressed about?"
+    help: "Current events, trends, or pressures that are creating anxiety or urgency for them."
+  q14:
+    question: "Is there a time of year when your product becomes absolutely essential?"
+    help: "Seasonal patterns, industry cycles, or recurring events that drive urgent need."
+  q15:
+    question: "What trends are you seeing that others in your industry are ignoring?"
+    help: "Emerging patterns or shifts that give you a potential first-mover advantage."
+  q16:
+    question: "What would make someone need your product RIGHT NOW instead of next month?"
+    help: "What situations, deadlines, or events create immediate urgency for your solution?"
+
+differentiators:
+  q17:
+    question: "What can you do with your resources that a massive competitor couldn't?"
+    help: "How does being smaller, more agile, or specialized give you unique advantages?"
+  q18:
+    question: "What's your 'secret sauce' that you've never put in marketing before?"
+    help: "Internal processes, unique capabilities, or special knowledge that creates value."
+  q19:
+    question: "What would happen if you did the complete opposite of what everyone else in your industry does?"
+    help: "How could contrarian thinking or zigging when others zag become a competitive advantage?"

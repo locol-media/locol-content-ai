@@ -1,0 +1,47 @@
+# Bearer scan configuration.
+#
+# Scope: first-party source only.
+#
+# Without this file a scan of the repo root reports ~1400 findings, of which
+# ~1300 are inside BackEnd/.venv - dependency source that this repo does not
+# author and cannot patch in place. SAST findings in third-party code are not
+# actionable here; vulnerable dependencies are a dependency-scanning concern
+# (upgrade the package), not something to fix in site-packages. Build output is
+# excluded for the same reason: it is generated, and any real defect lives in
+# the source it was generated from.
+#
+# Keeping this in the repo rather than in remembered CLI flags means every
+# operator - and any future CI job - scans exactly the same tree.
+#
+# Verified false positives are suppressed separately, in bearer.ignore, which is
+# also committed. Each entry there records why the finding is safe.
+#
+# Run with: ./scripts/run-bearer-scan.sh  (or .ps1 on Windows)
+
+scan:
+  skip-path:
+    # Python dependencies. .venv is the local virtualenv; site-packages covers
+    # it under any other venv name a developer might use.
+    - "**/.venv/**"
+    - "**/site-packages/**"
+
+    # Node dependencies.
+    - "**/node_modules/**"
+
+    # Stencil build output. FrontEnd/dist and FrontEnd/loader are not tracked in
+    # git at all. Everything under BackEnd/www is produced by the 'www' output
+    # target in FrontEnd/stencil.config.ts - www/build is the compiled bundle and
+    # www/includes is a verbatim copy of FrontEnd/src/includes. Both are committed
+    # only because the Dockerfile has no Node stage and copies BackEnd/ wholesale,
+    # so the container never runs the build (see the warning in BackEnd/src/main.py).
+    #
+    # Scanning them re-reports every FrontEnd/src finding a second time under a
+    # path nobody should edit. Fix FrontEnd/src and rebuild instead.
+    - "FrontEnd/dist/**"
+    - "FrontEnd/loader/**"
+    - "BackEnd/www/build/**"
+    - "BackEnd/www/includes/**"
+
+  # Bearer resolves domains found in source to classify third-party data flows.
+  # Scans should not depend on outbound network access.
+  disable-domain-resolution: true

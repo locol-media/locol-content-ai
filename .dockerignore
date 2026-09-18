@@ -1,0 +1,34 @@
+# Local virtual environments - the Dockerfile runs `uv sync` inside the
+# image to build these fresh; copying the host's (Windows) .venv over them
+# would break the container, and was also the direct cause of a
+# "failed to solve: invalid file request" build error.
+.venv/
+**/.venv/
+
+# Python bytecode/caches
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Not referenced by the Dockerfile at all
+FrontEnd/
+
+# VCS
+.git/
+.gitignore
+
+# Editor metadata
+.vscode/
+
+# Local dev-only data (Dockerfile already deletes this post-copy)
+BackEnd/db/
+BackEnd/src/db/
+/temp/
+
+# Secrets - never bake into an image
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+/keys/

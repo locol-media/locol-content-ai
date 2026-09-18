@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: locol-ai
+  labels:
+    name: locol-ai

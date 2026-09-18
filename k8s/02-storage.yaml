@@ -1,0 +1,21 @@
+# Persistent storage for the per-user SQLite databases (/app/BackEnd/db).
+# This is the only stateful volume the app needs. ReadWriteOnce is sufficient
+# because the Deployment runs a single replica (see 03-deployment.yaml).
+#
+# Set storageClassName to a block-storage class available in your cluster:
+#   - Amazon EKS:      gp3   (requires the EBS CSI driver)
+#   - DigitalOcean:    do-block-storage
+#   - GKE:             standard-rwo / premium-rwo
+#   - Local/kind/k3s:  standard  (or leave unset to use the cluster default)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: locol-ai-storage
+  namespace: locol-ai
+spec:
+  storageClassName: <RWO_STORAGE_CLASS>
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

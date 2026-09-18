@@ -1,0 +1,15 @@
+# Generated Story Question Set
+# Two-question set pre-filled from the business survey and story idea
+
+name: "Generated Story"
+page_configs_file: "generated_story_config.yaml"
+
+generated_story:
+  q1:
+    question: "Business Survey Summary"
+    help: "A summary generated from your business survey answers."
+    height: 600
+  q2:
+    question: "What is the skill content that we are addressing in this project"
+    help: "Describe the specific skill or expertise that this project will highlight."
+    height: 300

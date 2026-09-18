@@ -1,0 +1,5 @@
+# UI test dependencies. After installing, fetch the browsers once:
+#   playwright install chromium
+playwright>=1.48
+pytest>=8.0
+pytest-playwright>=0.5
