@@ -257,19 +257,27 @@ def home_page():
             # technique render_stage_overview()'s .stage-chrome cards use.
             st.markdown("""
             <style>
-              @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;700&display=swap');
+              /* No Playfair here: the hero headline is DM Sans like everything else in
+                 this panel. DM Sans is requested at 900 and in italic because the
+                 headline uses both (the emphasised "voice." is an italic 900) - without
+                 those faces the browser synthesises them, which looks smeared at 4rem. */
+              @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,900&display=swap');
 
               :root {
                 --bg: #0f0d0a;
                 --surface: #1a1712;
                 --orange: #ff4500;
-                --cream: #f5ede0;
-                --muted: #8a8070;
+                --cream: #fffdf8;  /* warm near-white - headlines and labels */
+                /* Secondary text. The old #8a8070 sat at ~5:1 on --bg - technically AA,
+                   but hard going at 0.7-0.9rem. This is ~8.6:1 and still reads as a step
+                   below --text. */
+                --muted: #b8ab98;
                 --text: #e8ddd0;
                 --border: rgba(245, 237, 224, 0.08);
               }
 
               .hero-panel {
+                --hero-inset: 1.1rem;
                 background: var(--bg);
                 border: 1px solid var(--border);
                 border-radius: 18px;
@@ -277,18 +285,36 @@ def home_page():
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                /* Baseline for anything inside that inherits its colour: without this
+                   it inherits Streamlit's dark page text, which is invisible here. */
+                color: var(--text);
               }
 
-              .hero-title {
-                font-family: 'Playfair Display', serif;
-                font-size: clamp(2.6rem, 4vw, 4.2rem);
+              /* Everything in the panel is inset except the headline, which stays flush
+                 left as the anchor the rest hangs off. One shared length, not 2ch: ch
+                 resolves against each element's OWN font, so the 0.7rem DM Mono eyebrow
+                 came out indented about half as far as the 1.05rem subhead above it and
+                 the left edge read as ragged. 1.1rem is two characters at the subhead's
+                 size, applied identically to every child. Kept as margin-left (a
+                 longhand) so the per-element margin-bottom rules below still apply. */
+              .hero-panel > *:not(.hero-title) {
+                margin-left: var(--hero-inset);
+              }
+
+              /* Two-part selectors deliberately: Streamlit colours headings inside a
+                 markdown container with "<emotion-class> h1" (specificity 0,1,1), which
+                 outranks a bare .hero-title (0,1,0) and left the title rendering in the
+                 dark page colour. Same reason .stage-chrome h3 below is scoped. */
+              .hero-panel .hero-title {
+                font-family: 'DM Sans', sans-serif;
+                font-size: clamp(2.08rem, 3.2vw, 3.36rem);  /* 20% down from 2.6/4/4.2 */
                 font-weight: 900;
                 line-height: 1.05;
                 color: var(--cream);
                 letter-spacing: -0.03em;
                 margin-bottom: 24px;
               }
-              .hero-title em {
+              .hero-panel .hero-title em {
                 font-style: italic;
                 color: var(--orange);
               }
@@ -297,7 +323,9 @@ def home_page():
                 font-family: 'DM Sans', sans-serif;
                 font-size: 1.05rem;
                 line-height: 1.7;
-                color: var(--muted);
+                /* Body copy, not a label: --text, with --muted left to the small
+                   uppercase eyebrows and descriptions below. */
+                color: var(--text);
                 max-width: 480px;
                 margin-bottom: 30px;
               }
@@ -358,7 +386,7 @@ def home_page():
                   <span class="benefit-icon">🎙️</span>
                   <div class="benefit-copy">
                     <span class="benefit-title">Sounds like you — not a chatbot</span>
-                    <span class="benefit-desc">Save a voice profile describing how you write, and every draft carries it — not a generic AI tone.</span>
+                    <span class="benefit-desc">Save multiple voice profiles describing how you write, and every draft carries the one you pick — not a generic AI tone.</span>
                   </div>
                 </div>
                 <div class="benefit-row">
@@ -480,14 +508,16 @@ def render_stage_overview():
     """
     st.markdown("""
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap');
+      /* Matches the hero's import above, for the same reasons: no Playfair, and DM Sans
+         at 900 plus italic because .stages-title uses an italic 900 for its emphasis. */
+      @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;0,900;1,400;1,900&display=swap');
 
       :root {
         --bg: #0f0d0a;
         --surface: #1a1712;
         --orange: #ff4500;
-        --cream: #f5ede0;
-        --muted: #8a8070;
+        --cream: #fffdf8;  /* warm near-white - keep in step with the hero's :root above */
+        --muted: #b8ab98;  /* as above: brightened for legibility at small sizes */
         --text: #e8ddd0;
         --border: rgba(245, 237, 224, 0.08);
       }
@@ -500,7 +530,7 @@ def render_stage_overview():
         text-transform: uppercase;
       }
       .stages-title {
-        font-family: 'Playfair Display', serif;
+        font-family: 'DM Sans', sans-serif;
         font-size: clamp(1.8rem, 3vw, 2.4rem);
         font-weight: 900;
         color: var(--cream);
@@ -515,7 +545,7 @@ def render_stage_overview():
         font-family: 'DM Sans', sans-serif;
         font-size: 1rem;
         line-height: 1.6;
-        color: var(--muted);
+        color: var(--text);  /* body copy, same call as .hero-sub */
         max-width: 640px;
         margin-bottom: 8px;
       }
@@ -571,8 +601,9 @@ def render_stage_overview():
         font-family: 'DM Sans', sans-serif;
         font-size: 0.85rem;
         line-height: 1.5;
+        /* No opacity dimming here: at 0.85rem it only cost contrast. Use a colour
+           token when something needs to recede. */
         color: var(--text);
-        opacity: 0.85;
         margin: 0;
       }
       .stage-locked-note {

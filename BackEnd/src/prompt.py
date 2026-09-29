@@ -11,9 +11,11 @@ def prompt_rag(question,context):
         If you don't know the answer, say that you don't know.
 
         Generate output in HTML format using only p, b,i,em,u,a,ul,ol,br,h1,h2 elements.
-        
-        Question: {question} 
-        Context: {context} 
+        Return only the content itself: no introduction or commentary about what you
+        wrote, and no markdown code fences.
+
+        Question: {question}
+        Context: {context}
         """
     
     return template
@@ -24,8 +26,10 @@ def prompt(question):
         If you don't know the answer, use your general knowledge or search the web.
 
         Generate output in HTML format using only p, b,i,em,u,a,ul,ol,br,h1,h2 elements.
-        
-        Question: {question} 
+        Return only the content itself: no introduction or commentary about what you
+        wrote, and no markdown code fences.
+
+        Question: {question}
         """
     return template
 

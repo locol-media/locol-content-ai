@@ -6,7 +6,7 @@ from prompt import prompt_rag, prompt
 from voice_manager import get_voice_prompt, compose_system_prompt
 from models import LLMQuery, LLMResponse
 from persist_history import insert_query_history
-from quill_html_to_delta import html_to_delta
+from quill_html_to_delta import html_to_delta, extract_html
 from quill_op import delta_to_plain_text
 import json
 import logging
@@ -106,16 +106,18 @@ async def invoke(query: LLMQuery, response_model=LLMResponse):
         logger.error(f"Error invoking content agent: {str(e)}")
         raise
 
-    # Process response
-    content = json.dumps(html_to_delta(res.output))
+    # Process response. Strip any preamble/code fence once, here, so raw_output (what
+    # Web shows as generated_content) is as clean as the Delta the editor gets.
+    output = extract_html(res.output)
+    content = json.dumps(html_to_delta(output))
     response = LLMResponse(
         content=content,
         timestamp=insert_query_history(
             query.project_id, query.item_id, query.channel_id, query.prompt_id,
             query.content, query.fields, llm_id, query.prompt_template, query.query,
-            content, query.panel_fractions, query.rag_on_off, res.output
+            content, query.panel_fractions, query.rag_on_off, output
         ),
-        output=res.output
+        output=output
     )
     return response
 

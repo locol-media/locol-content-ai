@@ -11,6 +11,7 @@ mean trusting the model with the browser.
 
 Everything here is stdlib (html.parser + html.escape); no sanitizer dependency.
 """
+import re
 from html import escape
 from html.parser import HTMLParser
 
@@ -29,6 +30,29 @@ DROP_CONTENT_TAGS = {"script", "style"}
 # `href` on <a> is the one attribute worth keeping, and the one place a scheme
 # check still matters once tags are allowlisted (javascript: URLs).
 ALLOWED_URL_SCHEMES = ("http://", "https://", "mailto:")
+
+# Mirrors extract_html() in BackEnd/src/quill_html_to_delta.py - Web is a separate
+# package and can't import it. Keep the two in step.
+_FENCE_RE = re.compile(r"```[ \t]*(?:html)?[ \t]*\r?\n(.*?)(?:```|\Z)", re.DOTALL | re.IGNORECASE)
+_BLOCK_OPEN_RE = re.compile(r"<(?:h1|h2|p|ul|ol)\b", re.IGNORECASE)
+_BLOCK_CLOSE_RE = re.compile(r"</(?:h1|h2|p|ul|ol)\s*>", re.IGNORECASE)
+
+
+def _extract_html(raw):
+    """Drop a preamble, code fence and trailing chatter around LLM-generated HTML."""
+    text = str(raw).strip()
+
+    fenced = _FENCE_RE.search(text)
+    if fenced and _BLOCK_OPEN_RE.search(fenced.group(1)):
+        text = fenced.group(1).strip()
+
+    first_open = _BLOCK_OPEN_RE.search(text)
+    if first_open:
+        closes = list(_BLOCK_CLOSE_RE.finditer(text))
+        end = closes[-1].end() if closes and closes[-1].end() > first_open.start() else len(text)
+        text = text[first_open.start():end]
+
+    return text
 
 
 class _Sanitizer(HTMLParser):
@@ -124,9 +148,10 @@ def sanitize_generated_html(raw):
     if not raw:
         return ""
 
-    # LLMs routinely fence their HTML; strip it the same way
-    # BackEnd/src/quill_html_to_delta.py does before parsing.
-    stripped = str(raw).strip().removeprefix("```html\n").removesuffix("```")
+    # LLMs routinely wrap their HTML in a preamble and a ```html fence. BackEnd now
+    # strips both before storing, but rows written earlier still carry them - and a
+    # surviving fence renders as a markdown code block, showing the HTML as source.
+    stripped = _extract_html(raw)
 
     parser = _Sanitizer()
     parser.feed(stripped)

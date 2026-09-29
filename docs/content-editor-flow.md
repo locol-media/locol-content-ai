@@ -282,9 +282,12 @@ flowchart TD
 - The pydantic-ai agent runs with exponential backoff on HTTP 429, honouring a
   server-supplied `Retry-After` when present
   ([`llm.py:162-254`](../BackEnd/src/llm.py#L162-L254)).
-- The HTML response is converted to a Quill Delta by
+- The reply is first trimmed by
+  [`extract_html()`](../BackEnd/src/quill_html_to_delta.py), which drops any
+  preamble, markdown code fence and trailing chatter the model wrapped around the
+  HTML. The result is converted to a Quill Delta by
   [`html_to_delta()`](../BackEnd/src/quill_html_to_delta.py) and stored as
-  `response`; the raw HTML is stored as `raw_output`.
+  `response`; the trimmed HTML is stored as `raw_output`.
 - The Delta returns as `res.content` and **replaces** the editor body, and is
   appended to the History pane under a timestamp separator.
 

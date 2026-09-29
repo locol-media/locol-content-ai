@@ -30,6 +30,16 @@ python -m venv .venv
 .venv/Scripts/python -m pytest -m smoke --headed          # watch it
 ```
 
+Unlike `BackEnd/` and `Web/`, this directory has no `pyproject.toml` — it is a plain
+`venv` + `requirements.txt` project, so `uv sync` does not apply here and reports
+"No `pyproject.toml` found". Note also that every command above invokes
+`.venv/Scripts/python -m <tool>` rather than `.venv/Scripts/pytest`. That is worth
+keeping: the `.exe` launchers pip installs carry the absolute path of the `python.exe`
+that created them, so they break with `Failed to canonicalize script path` if the
+checkout is ever moved or renamed, while `python -m` does not. To repair them after a
+move, rewrite just the launchers with
+`.venv/Scripts/python -m pip install --force-reinstall --no-deps pytest playwright`.
+
 Point the suite somewhere else, or at another account, with environment
 variables — `config.py` reads them all:
 

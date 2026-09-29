@@ -1,5 +1,11 @@
 # Locol Content AI
 
+---
+
+![Your story, told in your voice — Locol Content AI plans, writes, and refines your Reddit posts, capturing exactly how you talk. Sounds like you, not a chatbot; your expertise, already a story; a sharpened angle before you write; you're always the final review.](./cover.png)
+
+---
+
 An AI-assisted tool for telling your story on Reddit — end to end, from "what do I even have to say?" through to a finished post.
 
 ## Overview

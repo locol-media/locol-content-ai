@@ -393,6 +393,15 @@ See [BackEnd/README.md](../BackEnd/README.md#configuration) for the full referen
   overwrite the survivor, so regenerate both deliberately with
   `./scripts/generate-jwt-keys.ps1 -Force` — that only invalidates existing
   sessions.
+- **`Failed to canonicalize script path` (Windows), with nothing else on the line:**
+  the checkout was moved or renamed after its virtual environments were created. uv
+  writes the absolute path of each venv's `python.exe` into every console-script
+  `.exe` it installs (`streamlit.exe`, `uvicorn.exe`, …), and `uv sync` does not
+  rewrite them — the packages are still installed, so there is nothing for it to do.
+  Rebuild the launchers in both projects:
+  `uv sync --reinstall --project BackEnd` and `uv sync --reinstall --project Web`.
+  Deleting both `.venv` directories works too, and takes longer. `run-web-debug.ps1`
+  checks for this before launching either service and names the stale path.
 - **`… is not digitally signed` / `cannot be loaded` when running a `.ps1`:**
   PowerShell's execution policy is blocking local scripts. Run them for the
   current session with

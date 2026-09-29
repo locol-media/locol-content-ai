@@ -83,6 +83,61 @@ function Sync-UvProject {
     }
 }
 
+function Assert-VenvEntryPoint {
+    # Fails with an explicit message if <Dir>\.venv\Scripts\<Exe> cannot launch.
+    #
+    # Console scripts in a uv venv are Windows "trampoline" .exe shims that carry the
+    # absolute path of their own venv's python.exe appended to the end of the file.
+    # That path is baked in at install time and nothing rewrites it afterwards, so
+    # renaming or moving the checkout leaves every shim in both .venv directories
+    # pointing at a python.exe that no longer exists. The shim then dies with the bare
+    # line "Failed to canonicalize script path" - no mention of the path it tried, no
+    # mention of which shim - and the `uv sync` above does NOT repair it: the packages
+    # are still installed at the right versions, so sync has nothing to do. Checking
+    # the baked-in path here costs microseconds and names the real cause.
+    param([string]$Dir, [string]$Exe)
+
+    $exePath = Join-Path $Dir ".venv\Scripts\$Exe"
+    $problem = $null
+    if (-not (Test-Path -LiteralPath $exePath)) {
+        $problem = "$exePath is missing"
+    } else {
+        $bytes = [System.IO.File]::ReadAllBytes($exePath)
+        $tailLength = [Math]::Min(1024, $bytes.Length)
+        $tail = [Text.Encoding]::ASCII.GetString($bytes, $bytes.Length - $tailLength, $tailLength)
+        # The last such path in the footer is the interpreter the shim execs.
+        $paths = [regex]::Matches($tail, '[A-Za-z]:\\[^\x00\r\n"]*?pythonw?\.exe')
+        if ($paths.Count -gt 0) {
+            $embedded = $paths[$paths.Count - 1].Value
+            if (-not (Test-Path -LiteralPath $embedded)) {
+                $problem = "$Exe is hardwired to $embedded, which does not exist"
+            }
+        }
+        # No match means a shim layout this check doesn't recognise (a future uv, or a
+        # plain .exe). Say nothing rather than guess it is broken.
+    }
+    if (-not $problem) { return }
+
+    throw (@(
+        "The $Exe launcher in $Dir\.venv is unusable:"
+        "  - $problem"
+        ""
+        "This is what a moved or renamed checkout looks like. uv bakes the absolute path"
+        "of the venv's python.exe into every console-script .exe it installs, so the"
+        "shims still refer to wherever this repo used to live. Run one directly and all"
+        "it prints is 'Failed to canonicalize script path'."
+        ""
+        "Rebuild the launchers, keeping the same dependency versions:"
+        "  uv sync --reinstall --project $Dir"
+        ""
+        "Both projects are affected together, so the other one likely needs it too:"
+        "  uv sync --reinstall --project $backendDir"
+        "  uv sync --reinstall --project $webDir"
+        ""
+        "Deleting $Dir\.venv and re-running this script also works, and takes longer."
+    ) -join [Environment]::NewLine)
+}
+
 function Stop-ProcessTree {
     # Children first: $backend.Id is the `uv` launcher, and uvicorn - plus, under
     # --reload, the worker it spawns - are its descendants. Killing only the launcher
@@ -309,6 +364,7 @@ Write-Host "Syncing BackEnd dependencies..." -ForegroundColor Cyan
 if (-not (Sync-UvProject -Dir $backendDir)) {
     throw "uv sync kept failing in $backendDir - read the error above, it is not a transient lock."
 }
+Assert-VenvEntryPoint -Dir $backendDir -Exe "uvicorn.exe"
 
 # An orphaned BackEnd from an earlier run keeps the port bound. The uvicorn started
 # below would then die on bind while the readiness probe still gets its 200 - from the
@@ -378,14 +434,22 @@ try {
     if (-not (Sync-UvProject -Dir $webDir)) {
         throw "uv sync kept failing in $webDir - read the error above, it is not a transient lock."
     }
+    Assert-VenvEntryPoint -Dir $webDir -Exe "streamlit.exe"
 
     Write-Host "Starting Web (Streamlit) on http://localhost:$WebPort ..." -ForegroundColor Cyan
     $streamlitLogLevel = if ($DebugLogging) { "debug" } else { "info" }
     Push-Location $webDir
     try {
         uv run --no-sync streamlit run src/main.py "--server.port=$WebPort" "--logger.level=$streamlitLogLevel"
+        $webExit = $LASTEXITCODE
     } finally {
         Pop-Location
+    }
+    # Streamlit in the foreground means its own failures are the last thing on screen,
+    # but a bare exit code scrolls past unexplained - and Ctrl+C lands here too, which
+    # is not a failure. Name both readings rather than leaving the code to interpret.
+    if ($webExit -ne 0) {
+        Write-Warning "Streamlit exited with code $webExit. That is expected if you stopped it with Ctrl+C; otherwise the cause is in its output above."
     }
 }
 finally {

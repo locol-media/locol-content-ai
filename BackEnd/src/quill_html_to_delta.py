@@ -1,11 +1,44 @@
+import re
 from bs4 import BeautifulSoup
-from quill_delta import Delta 
+from quill_delta import Delta
 
 BLOCK_TAGS = {"p", "h1", "h2", "ul", "ol"}
 
+# A markdown code fence anywhere in the reply, optionally tagged html. An unclosed
+# fence (reply cut off mid-block) runs to the end of the text.
+_FENCE_RE = re.compile(r"```[ \t]*(?:html)?[ \t]*\r?\n(.*?)(?:```|\Z)", re.DOTALL | re.IGNORECASE)
+_BLOCK_OPEN_RE = re.compile(r"<(?:h1|h2|p|ul|ol)\b", re.IGNORECASE)
+_BLOCK_CLOSE_RE = re.compile(r"</(?:h1|h2|p|ul|ol)\s*>", re.IGNORECASE)
+
+
+def extract_html(raw):
+    """Reduce an LLM reply to the HTML content it was asked for.
+
+    Models routinely wrap their HTML in chatter - "Here's a Reddit post draft..." -
+    and a ```html fence. Left in, the fence survives as a markdown code block on the
+    Web idea card (raw tags shown as source) and the preamble lands in the editor.
+    Only replies that actually contain block tags are trimmed; plain text passes
+    through untouched.
+    """
+    if not raw:
+        return ""
+    text = str(raw).strip()
+
+    fenced = _FENCE_RE.search(text)
+    if fenced and _BLOCK_OPEN_RE.search(fenced.group(1)):
+        text = fenced.group(1).strip()
+
+    first_open = _BLOCK_OPEN_RE.search(text)
+    if first_open:
+        closes = list(_BLOCK_CLOSE_RE.finditer(text))
+        end = closes[-1].end() if closes and closes[-1].end() > first_open.start() else len(text)
+        text = text[first_open.start():end]
+
+    return text
+
+
 def html_to_delta(html):
-    stripHTML = html.removeprefix("```html\n").removesuffix("```")
-    soup = BeautifulSoup(stripHTML, "html.parser")
+    soup = BeautifulSoup(extract_html(html), "html.parser")
     delta = Delta()
 
     def is_blank_text(node):

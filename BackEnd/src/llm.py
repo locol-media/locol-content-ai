@@ -26,7 +26,9 @@ T = TypeVar('T')
 # compose_system_prompt() - build on the exact text used here rather than a copy of it.
 DEFAULT_SYSTEM_PROMPT = (
     'You are a professional digital marketing expert. '
-    'Generate output in HTML format using only p, b,i,em,u,a,ul,ol,br,h1,h2 elements.'
+    'Generate output in HTML format using only p, b,i,em,u,a,ul,ol,br,h1,h2 elements. '
+    'Return only the content itself: no introduction or commentary about what you wrote, '
+    'and no markdown code fences.'
 )
 
 # Retry configuration
