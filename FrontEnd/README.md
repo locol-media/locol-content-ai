@@ -2,8 +2,9 @@
 
 This is the source project for the **Content Editor**, the rich-text authoring surface where generated content gets reviewed, edited, and saved. It's a customized build of [stencil-quill](https://github.com/KillerCodeMonkey/stencil-quill), an MIT-licensed Stencil.js wrapper around the [Quill](https://quilljs.com/) rich-text editor, with a Locol-specific application layer built on top of the vendored components.
 
-- The vendored upstream component library (Stencil.js + TypeScript, under `src/components/`) is unmodified and documented in [VENDOR_README.md](./VENDOR_README.md) — see that file and this folder's `LICENSE` for the original MIT terms.
-- Locol's additions — `src/index.html` and `src/includes/*.js` (plain JavaScript, no build step) — implement the actual Content Editor UI: project/item/channel/LLM selection, a resizable multi-pane grid, prompt template selection with tag filtering, dynamic form fields generated from prompt placeholders, and a history view of prior LLM responses. These additions are covered by the repository's overall [GPLv3 license](../LICENSE), not the vendored MIT code.
+- The vendored upstream component library (Stencil.js + TypeScript, under `src/components/`) is unmodified and documented in [VENDOR_README.md](./VENDOR_README.md) — see that file and this folder's [LICENSE](./LICENSE) for the original MIT terms.
+- Locol's additions — `src/index.html` and Locol's own plain-JavaScript files in `src/includes/` (`auth.js`, `dynamic-*`, `getting-started.js`, `grid-master.*`, `prompt-window.*`, `quill-editor-window.js`; no build step) — implement the actual Content Editor UI: project/item/channel/LLM selection, a resizable multi-pane grid, prompt template selection with tag filtering, dynamic form fields generated from prompt placeholders, and a history view of prior LLM responses. These additions are covered by the repository's overall [GPLv3 license](../LICENSE), not the vendored MIT code.
+- `src/includes/` also holds vendored third-party assets that are *not* Locol's and carry their own licenses — Quill under `src/includes/vendor/` (BSD-3-Clause) and Intro.js as `intro.min.js` / `introjs.min.css` (AGPL-3.0, see [intro.LICENSE](./src/includes/intro.LICENSE)). All of them are listed in [THIRD-PARTY-NOTICES.md](../THIRD-PARTY-NOTICES.md).
 
 ## How it fits together
 

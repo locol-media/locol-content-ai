@@ -89,6 +89,10 @@ The three deep-dives it points at are written in plain language and are honest a
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](./LICENSE).
+Copyright (C) 2026 Locol Media. This project is licensed under the [GNU General Public License v3.0](./LICENSE) — [LICENSE](./LICENSE) is a verbatim copy of the license text, and [COPYRIGHT](./COPYRIGHT) carries the project's own copyright notice and grant.
 
-`FrontEnd/` is built on [stencil-quill](https://github.com/KillerCodeMonkey/stencil-quill), which remains under its original MIT license — see [FrontEnd/LICENSE](./FrontEnd/LICENSE) and [FrontEnd/VENDOR_README.md](./FrontEnd/VENDOR_README.md). Only the Locol-specific additions in that folder (`src/index.html`, `src/includes/`) are covered by this repository's GPLv3 license.
+Third-party components vendored into this repository keep their own licenses — [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md) lists each one, its version, and the paths it occupies.
+
+`FrontEnd/` is built on [stencil-quill](https://github.com/KillerCodeMonkey/stencil-quill), which remains under its original MIT license — see [FrontEnd/LICENSE](./FrontEnd/LICENSE) and [FrontEnd/VENDOR_README.md](./FrontEnd/VENDOR_README.md). The Locol-specific additions in that folder are covered by this repository's GPLv3 license: `src/index.html` and the Locol files in `src/includes/` (`auth.js`, `dynamic-*`, `getting-started.js`, `grid-master.*`, `prompt-window.*`, `quill-editor-window.js`) — but *not* the vendored Quill and Intro.js files that also live under `src/includes/`.
+
+One of those vendored components, [Intro.js](https://introjs.com), is licensed under the **AGPL-3.0**. GPLv3 §13 permits the combination, but AGPL §13 then applies to it: if you deploy this application, you must offer its source to users who interact with it over the network — linking this repository from the running app is enough. See [THIRD-PARTY-NOTICES.md](./THIRD-PARTY-NOTICES.md#introjs--agpl-30-or-a-commercial-license) for the detail and the alternatives.
