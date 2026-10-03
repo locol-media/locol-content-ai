@@ -4,6 +4,10 @@ This guide sets up Locol Content AI on a developer machine for local use and dev
 using the native Python toolchain ([uv](https://docs.astral.sh/uv/)). For a
 production Kubernetes deployment, see [deploy-k8s.md](./deploy-k8s.md) instead.
 
+If you only want to *run* the app rather than work on it, you don't need any of this:
+[deploy-compose.md](./deploy-compose.md) is a release download and `docker compose up -d`,
+with the container creating its own keys and database.
+
 ## 1. Overview
 
 You run two Python services side by side (the same two that ship together in the
@@ -195,7 +199,11 @@ setup step that runs through `uv` — it reuses the BackEnd's own
 
 **Don't skip it.** Nothing in the running app creates the `BackEnd/db/`
 directory, so a missing accounts database doesn't self-heal — registration and
-login fail with `unable to open database file`. To run just this step:
+login fail with `unable to open database file`. (That is specific to a native
+run like this one. The container image runs this same script from its entrypoint
+when the database is absent — [deploy-compose.md
+§4](./deploy-compose.md#4-what-the-first-start-creates) — so a Docker or
+Kubernetes deployment bootstraps itself.) To run just this step:
 
 ```bash
 uv run --project BackEnd python scripts/create_user_database.py
@@ -386,8 +394,10 @@ See [BackEnd/README.md](../BackEnd/README.md#configuration) for the full referen
 - **Registration or login fails with no useful message, or the BackEnd logs
   `unable to open database file`:** `BackEnd/db/persistent_data.sqlite` is missing —
   step 4 hasn't run. Nothing in the app creates the `db/` directory, so this does
-  not self-heal; re-run `./scripts/setup-local.ps1` (or `.sh`) from the repo root.
-  `./run-web-debug.ps1` checks for this before starting anything.
+  not self-heal in a native run; re-run `./scripts/setup-local.ps1` (or `.sh`) from
+  the repo root. `./run-web-debug.ps1` checks for this before starting anything.
+  (In a container the entrypoint creates it instead — see
+  [deploy-compose.md §4](./deploy-compose.md#4-what-the-first-start-creates).)
 - **The installer stops with "found one half of the JWT keypair but not the
   other":** one of the two `.pem` files was deleted or truncated. It won't
   overwrite the survivor, so regenerate both deliberately with

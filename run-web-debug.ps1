@@ -380,7 +380,7 @@ if ($stale) {
 }
 
 Write-Host "Starting BackEnd (FastAPI) on http://localhost:$BackendPort ..." -ForegroundColor Cyan
-# BackEnd/src/main.py's own `uvicorn.run(..., reload=True)` watches the whole
+# BackEnd/src/main.py's own uvicorn.run (reload gated on DEBUG) watches the whole
 # BackEnd/ dir, including .venv - thousands of files the app never imports from,
 # where a single `uv sync` touching a package restarts the server mid-request.
 # (It was worse when this repo lived in Dropbox, whose syncing kept the watcher in

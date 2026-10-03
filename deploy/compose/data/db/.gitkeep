@@ -1,0 +1,9 @@
+# Keeps this directory in git and in the release archive.
+#
+# docker-compose.yml bind-mounts it over /app/BackEnd/db inside the container, where the
+# entrypoint creates persistent_data.sqlite (accounts) and the app creates
+# users/<user_id>.sqlite as people register. The directory has to exist beforehand - see
+# the note in ../keys/.gitkeep for why.
+#
+# Nothing generated into it is ever committed: *.sqlite* is covered by the repo-root
+# .gitignore.

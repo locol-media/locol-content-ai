@@ -68,10 +68,33 @@ See each subproject's README for details: [BackEnd](./BackEnd/README.md), [Web](
 
 - **Using the app** — the full workflow, stage by stage: [docs/how-to-use.md](./docs/how-to-use.md)
 - **Architecture** — the components, the request path, where state lives, and what a production deployment looks like: [docs/application-architecture.md](./docs/application-architecture.md)
+- **Docker Compose** — the shortest path to a running install: download a release package, `docker compose up -d`, no clone and no toolchain. It creates its own keys and database on the first start: [docs/deploy-compose.md](./docs/deploy-compose.md)
 - **Local development** — prerequisites, one-time key/database setup, running both services and building the Content Editor: [docs/deploy-local.md](./docs/deploy-local.md)
 - **Kubernetes (EKS / DigitalOcean)** — image build, secrets, manifests, DNS/TLS: [docs/deploy-k8s.md](./docs/deploy-k8s.md)
+- **Cutting a release** — the GHCR tag scheme, how to publish an image, provenance and rollback: [docs/release.md](./docs/release.md)
 - **LLM API keys** — how they're encrypted at rest, and how the Bifrost gateway gives each user a capped, scoped virtual key instead of a shared provider key: [docs/llm-keys.md](./docs/llm-keys.md)
 - **Security overview** — the map of every layer, the controls no other document covers, and an honest register of the gaps: [docs/security-management.md](./docs/security-management.md)
+
+## Container images
+
+Prebuilt images are published to GitHub Container Registry, so deploying needs no
+local build:
+
+```
+ghcr.io/locol-media/locol-content-ai:0.2.0   # a release - immutable, use in production
+ghcr.io/locol-media/locol-content-ai:latest  # newest release; moves
+ghcr.io/locol-media/locol-content-ai:edge    # newest commit on main; moves
+```
+
+One image holds all three processes (FastAPI, Streamlit, sqlite-web) under
+supervisord. See [docs/release.md](./docs/release.md) for the full tag scheme and how
+releases are cut, and [docs/deploy-k8s.md](./docs/deploy-k8s.md) to deploy one.
+
+Each release also carries a **Docker Compose package** —
+`locol-content-ai-<version>.zip` / `.tar.gz` on the release page — holding a compose file
+pinned to that version, so running the app is a download and one command. The container
+generates its own JWT keys, database encryption key and accounts database on first start,
+so there is no setup step: [docs/deploy-compose.md](./docs/deploy-compose.md).
 
 ## Tech stack
 

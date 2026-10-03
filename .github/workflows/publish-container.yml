@@ -1,0 +1,209 @@
+# Builds the single application image (see /Dockerfile) and publishes it to this
+# repository's GitHub Container Registry package. On a published release it also attaches
+# the Docker Compose package - the ready-to-run download described in
+# docs/deploy-compose.md - to the release itself.
+#
+# What produces what:
+#   push to main            -> :edge and :main-<short-sha>
+#   release published       -> :X.Y.Z, :X.Y, :X (1.0.0+ only), :latest (non-prerelease),
+#                              plus locol-content-ai-<version>.{zip,tar.gz} as release assets
+#   workflow_dispatch       -> same as the ref it is run from, and no release assets
+#
+# The image name is ${{ github.repository }} rather than a hardcoded
+# locol-media/locol-content-ai on purpose: GITHUB_TOKEN can only write to packages
+# owned by the repo the workflow runs in, so a hardcoded path 403s when this runs
+# from the locol-media-dev fork and would need a long-lived PAT instead. It resolves
+# to ghcr.io/locol-media/locol-content-ai upstream, and lets the fork smoke-test the
+# workflow against its own package. To stop the fork publishing at all, see the
+# `push:` line on the build step.
+name: Publish container image
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# Supersede in-flight builds for the same ref. Releases are excluded: each one is a
+# distinct tag and cancelling a half-finished publish would leave the package without
+# the version anyone is waiting on.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'release' }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # Both are required by actions/attest-build-provenance below. Drop them if
+      # that step goes.
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          # Injected automatically - there is no secret to create for this workflow.
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Derive image tags and labels
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          # latest=false, then an explicit type=raw rule below. With latest=auto an
+          # :edge build on main could end up carrying :latest, which would silently
+          # move the tag the deployment manifests pull by default.
+          flavor: latest=false
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+            type=raw,value=latest,enable=${{ github.event_name == 'release' && github.event.release.prerelease == false }}
+            type=edge,branch=main
+            type=sha,prefix=main-,format=short,enable=${{ github.ref == 'refs/heads/main' }}
+          # org.opencontainers.image.source is emitted automatically from the repo and
+          # is load-bearing, not cosmetic: it is what links the GHCR package back to
+          # this repository in the GitHub UI. The licence label matches /LICENSE and
+          # /COPYRIGHT - note THIRD-PARTY-NOTICES.md records that bundled Intro.js is
+          # AGPL-3.0, so deploying this image carries a source-offer obligation.
+          labels: |
+            org.opencontainers.image.title=Locol Content AI
+            org.opencontainers.image.description=AI content authoring app - FastAPI backend, Streamlit web UI and Content Editor in one container.
+            org.opencontainers.image.licenses=GPL-3.0-or-later
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          # Change to `github.repository == 'locol-media/locol-content-ai'` if the
+          # fork should build for validation but never publish.
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: true
+          # Worth caching specifically because the two `uv sync --frozen` layers
+          # (Dockerfile:38 and :44) dominate the build and only invalidate when a
+          # uv.lock changes.
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Attest build provenance
+        # Releases only - signing every :edge build adds noise without a consumer.
+        if: github.event_name == 'release'
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+  # Attaches the Docker Compose package to the release: a small archive holding
+  # docker-compose.yml, .env.example, a quickstart README and the licence files, so
+  # running this app needs a download and `docker compose up -d` rather than a clone.
+  #
+  # A separate job rather than more steps on `publish` because it needs a different
+  # permission (contents: write, to upload an asset) which the build job has no business
+  # holding. It still waits on `publish`: the compose file it ships names an image tag,
+  # and publishing a package that points at an image that does not exist yet would hand
+  # someone a manifest-unknown error.
+  package:
+    needs: publish
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      # All `gh release upload` needs, and the reason this is not a step on the build
+      # job, which deliberately holds contents: read.
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Build the compose package
+        env:
+          # Through the environment, not inlined into the script below: a tag name is
+          # attacker-controllable text on a fork, and `${{ }}` interpolation would make
+          # it part of the shell source.
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          IMAGE: ghcr.io/${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # docs/release.md requires the v prefix, which is also what type=semver strips
+          # when naming the image tags - so the asset version matches the image tag
+          # exactly. Anything else is a release someone tagged by hand against the
+          # documented scheme, and the image it would name does not exist.
+          case "$TAG_NAME" in
+            v*) VERSION="${TAG_NAME#v}" ;;
+            *)
+              echo "Error: release tag '$TAG_NAME' does not start with 'v'." >&2
+              echo "       The image tags are derived by stripping it (see docs/release.md)," >&2
+              echo "       so there is no published image this package could point at." >&2
+              exit 1
+              ;;
+          esac
+
+          NAME="locol-content-ai-$VERSION"
+          echo "NAME=$NAME" >> "$GITHUB_ENV"
+
+          mkdir -p "$NAME"
+          cp deploy/compose/docker-compose.yml "$NAME/"
+          cp deploy/compose/.env.example "$NAME/"
+          cp deploy/compose/README.md "$NAME/"
+          # The image bundles AGPL-3.0 Intro.js, so anyone deploying from this archive
+          # carries a source-offer obligation. Shipping the notices with it is the point,
+          # not decoration - see THIRD-PARTY-NOTICES.md.
+          cp LICENSE COPYRIGHT THIRD-PARTY-NOTICES.md "$NAME/"
+          # Empty, and that matters: the entrypoint fills them on the first start, and
+          # their existing is what stops Docker creating them as root on Linux. `zip -r`
+          # and tar both need a file to carry a directory, hence the .gitkeep.
+          mkdir -p "$NAME/data/keys" "$NAME/data/db"
+          cp deploy/compose/data/keys/.gitkeep "$NAME/data/keys/"
+          cp deploy/compose/data/db/.gitkeep "$NAME/data/db/"
+
+          # Pin the image. The repo copy carries ${LOCOL_IMAGE_TAG:-latest} so a clone
+          # tracks the newest release, but a download of 0.2.0 that silently runs
+          # whatever :latest becomes next month is not a release artifact.
+          sed -i "s|^\( *image: \).*$|\1$IMAGE:$VERSION|" "$NAME/docker-compose.yml"
+
+          # Assert the rewrite landed. A sed that matches nothing exits 0, so without
+          # this a renamed key or a reindented file would ship a floating tag from an
+          # archive whose whole purpose is to be immutable.
+          if ! grep -qx "    image: $IMAGE:$VERSION" "$NAME/docker-compose.yml"; then
+            echo "Error: failed to pin the image in docker-compose.yml. Found:" >&2
+            grep -n "image:" "$NAME/docker-compose.yml" >&2 || echo "  (no image: line at all)" >&2
+            exit 1
+          fi
+          echo "Pinned image: $IMAGE:$VERSION"
+
+          # Both formats, because this is downloaded by hand: zip is what Windows opens
+          # without a tool, tar.gz is what a Linux server already has.
+          zip -r "$NAME.zip" "$NAME"
+          tar -czf "$NAME.tar.gz" "$NAME"
+          ls -l "$NAME.zip" "$NAME.tar.gz"
+
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        # --clobber so re-running a failed publish replaces the assets instead of
+        # failing on the ones that already uploaded.
+        run: |
+          gh release upload "$TAG_NAME" \
+            "$NAME.zip" "$NAME.tar.gz" \
+            --clobber \
+            --repo "${{ github.repository }}"

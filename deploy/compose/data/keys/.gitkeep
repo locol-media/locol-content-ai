@@ -1,0 +1,10 @@
+# Keeps this directory in git and in the release archive.
+#
+# docker-compose.yml bind-mounts it over /keys inside the container, and the entrypoint
+# generates the four session-token PEMs and db_encryption.key into it on the first start.
+# The directory has to exist beforehand: Docker creates a missing bind-mount source
+# itself, but as root, and the container runs as UID 1000 - so an empty directory
+# shipped here is what stops a first `docker compose up` failing on Linux.
+#
+# Nothing generated into it is ever committed - keys/, *.pem and *.key are all covered
+# by the repo-root .gitignore.

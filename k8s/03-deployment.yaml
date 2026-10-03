@@ -45,10 +45,14 @@ spec:
       # - name: registry-credentials
       containers:
       - name: locol-ai
-        # Replace with your registry/image:tag, e.g.
+        # Published by .github/workflows/publish-container.yml on each GitHub Release
+        # (see docs/release.md). Prefer pinning to an immutable version tag in
+        # production - :latest and :edge both move under you. Alternatives:
+        #   ghcr.io/locol-media/locol-content-ai:0.2.0                   (pinned)
+        #   ghcr.io/locol-media/locol-content-ai:edge                    (tracks main)
         #   <acct>.dkr.ecr.<region>.amazonaws.com/locol-ai:latest        (ECR)
         #   registry.digitalocean.com/<your-registry>/locol-ai:latest    (DOCR)
-        image: <YOUR_REGISTRY>/locol-ai:latest
+        image: ghcr.io/locol-media/locol-content-ai:latest
         imagePullPolicy: Always
         # readOnlyRootFilesystem is deliberately absent: `uv run` resolves the
         # virtualenv at start-up, Streamlit writes under $HOME and supervisord writes

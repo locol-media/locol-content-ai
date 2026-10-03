@@ -451,4 +451,15 @@ async def login_user_endpoint(request: Request, body: LoginUserRequest):
 # the suite instead of going unnoticed.
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get("LOCOL_BACKEND_PORT", "8000")), reload=True)
+    # reload is dev-only and off by default. This same entry point is what supervisord
+    # runs in the container (`uv run python src/main.py`), so a hardcoded reload=True
+    # shipped the file-watcher and its worker-respawn path into every published image.
+    # DEBUG is the switch llm.py, rag_run.py and generate_project_items.py already read.
+    # Note run-web-debug.ps1 does not come through here - it launches the uvicorn CLI
+    # with its own --reload --reload-dir src, so local debugging is unaffected.
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(os.environ.get("LOCOL_BACKEND_PORT", "8000")),
+        reload=os.environ.get("DEBUG", "").lower() in ("true", "1", "yes"),
+    )

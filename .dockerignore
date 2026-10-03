@@ -13,6 +13,11 @@ __pycache__/
 # Not referenced by the Dockerfile at all
 FrontEnd/
 
+# The compose package sources. Not copied into the image - and deploy/compose/data/ is
+# where a `docker compose up` from a clone writes its live keys and SQLite databases,
+# which have no business entering a build context.
+deploy/
+
 # VCS
 .git/
 .gitignore

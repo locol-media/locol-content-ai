@@ -8,6 +8,12 @@
 .env.*
 credentials.json
 
+# ...except the template shipped in the Docker Compose release package, which holds
+# nothing but variable names and defaults. Without this negation `.env.*` above swallows
+# it, and the release asset would be built without the file its README tells people to
+# copy.
+!.env.example
+
 # SQLite databases (contain user data; bootstrapped via scripts/create_user_database.py
 # or provisioned by persistent volumes in deployment - never committed)
 *.sqlite*
