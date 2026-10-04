@@ -1,0 +1,95 @@
+# Locol Content AI - single-host deployment.
+#
+#   docker compose up -d        then open http://localhost:8501
+#
+# Full guide, including what gets created on the first start and how to upgrade:
+# https://github.com/locol-media/locol-content-ai/blob/main/docs/deploy-compose.md
+#
+# One image runs all three processes under supervisord (FastAPI, Streamlit, sqlite-web).
+# There is nothing to build and no setup script: on the first start the container's
+# entrypoint generates the session-token key pairs, the database encryption key and the
+# accounts database into ./data, and skips all of it on every start after that.
+#
+# Copy .env.example to .env to change the image tag, the published ports or the URLs.
+# Every ${...} below has a working default, so no .env at all is fine. Compose reads
+# that file itself to fill them in - note it is deliberately NOT passed into the
+# container with env_file, because the names the app reads for its *internal* ports are
+# the same ones used here for the *published* ones, and injecting them would move the
+# ports the processes bind out from under the mappings below.
+
+services:
+  locol-ai:
+    image: ghcr.io/locol-media/locol-content-ai:${LOCOL_IMAGE_TAG:-latest}
+    container_name: locol-ai
+    restart: unless-stopped
+
+    # Left of the colon is the port on this machine, right of it the port inside the
+    # container, which is fixed. Change the left-hand side in .env if something else
+    # already has 8501 or 8000.
+    ports:
+      # The web UI - this is the one to open.
+      - "${LOCOL_WEB_PORT:-8501}:8501"
+      # The API, the Content Editor (/www) and the OpenAPI docs (/docs). The Content
+      # Editor runs in your browser and calls this port directly, so it has to be
+      # published even though the web UI above is the entry point.
+      - "${LOCOL_BACKEND_PORT:-8000}:8000"
+      # sqlite-web, a database admin UI, is also running inside the container on 8080
+      # and is deliberately NOT published. It has no login and allows writes to every
+      # user's data, so publishing it puts an unauthenticated editor for the whole
+      # database on the network. Uncomment to reach it from this machine only - never
+      # as plain "8080:8080", which binds every interface:
+      # - "127.0.0.1:8080:8080"
+
+    volumes:
+      # Everything that must outlive the container. Both directories ship empty in the
+      # release package; the entrypoint fills them on the first start.
+      #
+      # On Linux these must be owned by UID 1000, which is the user the image runs as.
+      # They are owned correctly if you extracted the release archive, because Docker
+      # only creates a bind-mount source itself - as root - when it is missing. If a
+      # start fails with a permission error naming one of these, run:
+      #   sudo chown -R 1000:1000 ./data
+      #
+      # keys/ holds the four session-token PEMs and db_encryption.key. BACK UP
+      # data/keys/db_encryption.key: it encrypts every user's stored LLM API key, there
+      # is one key for all of them, and this file is the only copy.
+      - ./data/keys:/keys
+      # db/ holds persistent_data.sqlite (accounts) and users/<user_id>.sqlite (one
+      # database per account - all of their content).
+      - ./data/db:/app/BackEnd/db
+
+    environment:
+      # Let the container create its own keys and accounts database in ./data when they
+      # are not there yet. This is what makes a first start work with nothing but Docker
+      # installed, and it is off in the image by default - a deployment that provisions
+      # these from outside (Kubernetes, with Secrets and a PVC) must not have them seeded
+      # underneath it. Every start after the first finds them present and changes
+      # nothing. See docs/deploy-compose.md section 4.
+      LOCOL_BOOTSTRAP: ${LOCOL_BOOTSTRAP:-true}
+      # Where your browser reaches the API and the Content Editor. These two URLs are
+      # handed to the browser, so they must be what the browser can reach - not what the
+      # container can. The defaults are right for using the app on this same machine
+      # with the published port left at 8000; set both in .env if you changed
+      # LOCOL_BACKEND_PORT above, or if you reach this host by any other name
+      # (http://192.168.1.10:8000, https://locol.example.com).
+      LOCOL_API_URL: ${LOCOL_API_URL:-http://localhost:8000}
+      LOCOL_WWW_URL: ${LOCOL_WWW_URL:-http://localhost:8000}
+      # Seconds the web UI waits on a request that triggers an LLM call. Model latency
+      # is measured in minutes, not seconds.
+      LOCOL_LLM_REQUEST_TIMEOUT: ${LOCOL_LLM_REQUEST_TIMEOUT:-180}
+      DEBUG: ${DEBUG:-false}
+
+    # Streamlit's own health endpoint, which needs no application code. Checked with
+    # python3 because the image has no curl or wget.
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=5)"
+      # The first start generates an RSA key pair and a database before any of the three
+      # processes begins listening, hence the start period rather than a bare interval.
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 3

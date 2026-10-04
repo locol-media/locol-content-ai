@@ -63,9 +63,33 @@ creates them imperatively. Do that before applying `k8s/`.
 - A container registry you can push to (ECR, DOCR, GHCR, Docker Hub, …).
 - Control over a DNS name to point at the ingress load balancer.
 
-## 3. Build and push the image
+## 3. Get the image
 
-From the repo root:
+### Option A — pull the published image (recommended)
+
+Every GitHub Release publishes a prebuilt image to GitHub Container Registry, so
+there is nothing to build:
+
+```
+ghcr.io/locol-media/locol-content-ai:0.2.0   # immutable - use this in production
+ghcr.io/locol-media/locol-content-ai:latest  # newest release; moves
+ghcr.io/locol-media/locol-content-ai:edge    # newest commit on main; moves
+```
+
+`k8s/03-deployment.yaml` already points at `:latest`. Change it to a version tag for
+anything you care about keeping reproducible — `:latest` and `:edge` both move under
+you, and the Deployment sets `imagePullPolicy: Always`, so a restart is enough to
+pick up a different image. See [release.md](release.md) for the full tag scheme and
+how releases are cut.
+
+If the package is **public**, no pull secret is needed and you can skip to section 4.
+If it is **private**, see [image pull secret](#image-pull-secret-private-registries)
+below.
+
+### Option B — build and push to your own registry
+
+Needed if you've made local changes, or if your cluster must pull from a registry
+inside your own account. From the repo root:
 
 ```bash
 docker build -t locol-ai:latest .
@@ -95,6 +119,19 @@ Set the pushed image reference in `k8s/03-deployment.yaml` (`image:`).
 
 ### Image pull secret (private registries)
 
+- **GHCR:** only needed if the package visibility is Private. Create a classic PAT
+  with the `read:packages` scope, then:
+
+  ```bash
+  kubectl create secret docker-registry registry-credentials \
+    --namespace locol-ai \
+    --docker-server=ghcr.io \
+    --docker-username=<github-username> \
+    --docker-password=<PAT with read:packages>
+  ```
+
+  Then uncomment the `imagePullSecrets` stub in `03-deployment.yaml`. Making the
+  package public avoids all of this.
 - **ECR:** nodes with an appropriate IAM role can pull from ECR without a pull
   secret. Otherwise create a `docker-registry` secret from an `aws ecr
   get-login-password` token.
@@ -126,6 +163,22 @@ This writes `keys/private_key.pem`, `keys/public_key.pem`,
 > **Warning:** keep `db_encryption.key` safe and stable. It decrypts the LLM API
 > keys stored in the per-user databases — if you lose or regenerate it after data
 > has been saved, those stored keys become permanently unrecoverable.
+
+> **Nothing is generated for you in-cluster, by design.** The image's entrypoint
+> ([`scripts/docker-entrypoint.sh`](../scripts/docker-entrypoint.sh)) *can* create these
+> five files and the accounts database, which is how the single-host compose deployment
+> works ([deploy-compose.md §4](deploy-compose.md#4-what-the-first-start-creates)) — but
+> only when `LOCOL_BOOTSTRAP` is set, and this deployment deliberately never sets it.
+>
+> That is not a limitation to work around. A key generated inside a pod lives on the
+> container filesystem: it disappears on the next restart, logging every user out, and
+> if it were `db_encryption.key` it would take every stored LLM API key with it. The
+> keys belong in Secrets and the database on the PVC, provisioned here, where they
+> outlive any pod.
+>
+> On start the entrypoint reports what it found and starts the services either way, so a
+> Secret that is missing or incomplete still surfaces the way the rest of this section
+> describes — as a 500 naming the unreadable path — rather than as a CrashLoopBackOff.
 
 Create the namespace first, then the secrets in it:
 

@@ -10,14 +10,24 @@ ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_CACHE_DIR=/tmp/uv-cache
 
-# Install system dependencies
+# Install system dependencies.
+# openssl is here for scripts/docker-entrypoint.sh: the two key generators it delegates
+# to shell out to the openssl CLI, which the python:*-slim base is not guaranteed to
+# carry (libssl is not the command-line tool). Without it a first start against an
+# empty volume fails at key generation instead of creating the keys.
 RUN apt-get update && apt-get install -y \
     supervisor \
+    openssl \
     sqlite3 nano \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+# Install uv. Pinned, not :latest - a release tag has to rebuild to the same image
+# months later, and `uv sync --frozen` below is the step most sensitive to the
+# resolver version. Both lockfiles are lock-format revision 2, written by an older
+# uv; --frozen reads them as-is without rewriting, so a newer resolver is fine, but
+# re-run the BackEnd suite when bumping this. Same reasoning as the sqlite-web pin
+# further down - leaving a dependency unpinned is what let the bad release in there.
+COPY --from=ghcr.io/astral-sh/uv:0.12.23 /uv /usr/local/bin/uv
 
 # Set working directory
 WORKDIR /app
@@ -73,8 +83,15 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # changing the manifests leaves the app unable to create per-user databases.
 # HOME is set explicitly so uv and Streamlit have a writable home under any
 # invocation, not only ones that resolve it from /etc/passwd.
+#
+# /keys and /app/BackEnd/db are created here, empty and owned by app, because both are
+# mount points the container must be able to write into. The line above deletes
+# ./BackEnd/db after the copy, so without this the db bind mount would land on a path
+# that does not exist in the image; and the entrypoint generates the key files into
+# /keys on a first start, which it can only do if that directory is app's.
 RUN useradd --create-home --uid 1000 --shell /bin/bash app && \
-    chown -R app:app /app && \
+    mkdir -p /keys /app/BackEnd/db && \
+    chown -R app:app /app /keys && \
     chown -R app:app /var/log/supervisor
 ENV HOME=/home/app
 
@@ -88,6 +105,18 @@ ENV LOCOL_BACKEND_PORT=8000 \
     LOCOL_SQLITE_WEB_PORT=8080 \
     LOCOL_USER_DB_PORT=8081
 
+# Where the two services look for the session-token key pairs and the DB encryption key.
+# Set here so the container has one canonical, mountable keys directory: without these,
+# both resolve to a path relative to each service's working directory (/app/keys), which
+# is inside the image rather than on a volume. docker-compose.yml bind-mounts ./data/keys
+# over /keys, and scripts/docker-entrypoint.sh generates into whatever these name.
+#
+# Kubernetes overrides both from k8s/01-configmap.yaml (/keys and /db-key, two separate
+# Secrets), so nothing about that deployment changes - these are only the defaults for
+# `docker run` and compose.
+ENV LOCOL_JWT_KEYS_LOCATION=/keys \
+    LOCOL_DB_ENCRYPTION_KEY_LOCATION=/keys
+
 # Expose ports. Metadata only, resolved at build time - a runtime override of the
 # variables above changes what the processes bind, not what is declared here.
 EXPOSE ${LOCOL_WEB_PORT} ${LOCOL_BACKEND_PORT} ${LOCOL_SQLITE_WEB_PORT}
@@ -97,6 +126,17 @@ EXPOSE ${LOCOL_WEB_PORT} ${LOCOL_BACKEND_PORT} ${LOCOL_SQLITE_WEB_PORT}
 # app. Anything added after this line is written as app and cannot use apt-get or
 # write outside /app, /home/app and /tmp.
 USER app
+
+# Report on the start-up artifacts (key pairs, DB encryption key, users database) and,
+# with LOCOL_BOOTSTRAP=true, create the missing ones - then exec the CMD below. Creating
+# them is opt-in, not the default: a deployment that provisions them from outside, as
+# k8s/ does with Secrets and a PVC, must not have artifacts seeded underneath it. The
+# compose file in deploy/compose/ sets the flag, because a single host has nowhere else
+# for them to come from.
+#
+# Invoked through /bin/bash rather than relying on the script's executable bit, which a
+# checkout on a filesystem without permission bits - a Windows one - may not preserve.
+ENTRYPOINT ["/bin/bash", "/app/scripts/docker-entrypoint.sh"]
 
 # Start supervisor to manage both processes
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
