@@ -85,7 +85,16 @@ disk. No Python, no `uv`, no `openssl` on the host — all three are inside the 
 This is the part that differs from every other deployment. The image's entrypoint,
 [`scripts/docker-entrypoint.sh`](../scripts/docker-entrypoint.sh), creates whatever
 start-up artifact is missing before handing off to supervisord, so an empty `./data`
-becomes a working install with no setup step:
+becomes a working install with no setup step.
+
+It does that because `docker-compose.yml` sets **`LOCOL_BOOTSTRAP=true`**. Creating
+artifacts is opt-in, and off in the image by default: a deployment that provisions these
+from outside the container — Kubernetes, with Secrets and a PVC — must not have them
+seeded underneath it, since a key generated inside a pod would be lost on the next
+restart. On a single host there is nowhere else for them to come from, so this is the
+deployment that asks for it.
+
+What it creates:
 
 | Artifact | Created by | Notes |
 |---|---|---|
@@ -110,13 +119,15 @@ The contract matches that installer's, too, and is what makes a restart safe:
   `LOCOL_JWT_KEYS_LOCATION` and `LOCOL_DB_ENCRYPTION_KEY_LOCATION` — so it cannot write
   somewhere the services do not look.
 
-Set `LOCOL_BOOTSTRAP=false` to skip the whole thing, for a deployment that provisions
-every artifact itself and wants a missing one to fail loudly at first use instead.
+Set `LOCOL_BOOTSTRAP=false` in `.env` to turn it off here too — the container then
+reports what is missing, starts anyway, and fails at the point of use, which is what you
+want if you are supplying the keys yourself.
 
-The entrypoint is in the image, so it runs for *any* way of starting that image.
-Kubernetes gets the keys from Secrets, so there it finds them present, skips, and creates
-only `persistent_data.sqlite` on a fresh volume — see
-[deploy-k8s.md §4](./deploy-k8s.md#4-generate-keys-create-secrets-and-the-question-sets-configmap).
+The entrypoint runs for *any* way of starting this image, but with the flag unset it only
+looks and reports. So a `docker run` without it, and every Kubernetes deployment, creates
+nothing at all — see
+[deploy-k8s.md §4](./deploy-k8s.md#4-generate-keys-create-secrets-and-the-question-sets-configmap)
+for why that is the right default there.
 
 ## 5. Back up `data/keys/db_encryption.key`
 
@@ -211,7 +222,7 @@ variable reference, including the ones that only apply to a native run, is
 | `LOCOL_WWW_URL` | `http://localhost:8000` | Base URL for Content Editor links |
 | `LOCOL_LLM_REQUEST_TIMEOUT` | `180` | Seconds the UI waits on an LLM-backed request |
 | `DEBUG` | `false` | Verbose LLM/request logging |
-| `LOCOL_BOOTSTRAP` | *(on)* | Set `false` to skip artifact creation entirely ([§4](#4-what-the-first-start-creates)) |
+| `LOCOL_BOOTSTRAP` | `true` (set by the compose file; off in the image) | Whether the container creates missing keys and the accounts database ([§4](#4-what-the-first-start-creates)) |
 
 `.env` is read by Compose to fill in the `${...}` references, and deliberately **not**
 passed into the container with `env_file`: the names used above for the *published* ports

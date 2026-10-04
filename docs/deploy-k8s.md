@@ -164,19 +164,21 @@ This writes `keys/private_key.pem`, `keys/public_key.pem`,
 > keys stored in the per-user databases — if you lose or regenerate it after data
 > has been saved, those stored keys become permanently unrecoverable.
 
-This step is still required, and still yours. The image's entrypoint
-([`scripts/docker-entrypoint.sh`](../scripts/docker-entrypoint.sh), described in
-[deploy-compose.md §4](deploy-compose.md#4-what-the-first-start-creates)) can generate
-these five files itself, but here it finds them already mounted from the two Secrets
-below and skips — which is what you want: a key generated inside the pod would live on
-the container filesystem and be lost on the next restart, logging everyone out, and a
-regenerated `db_encryption.key` would take every stored LLM key with it. Generate them
-here, hold them in Secrets.
-
-What the entrypoint *does* do on this deployment is create
-`BackEnd/db/persistent_data.sqlite` on a freshly provisioned PVC, so the accounts
-database is in place before the first registration rather than relying on
-`init_users_table()` being hit at the right moment.
+> **Nothing is generated for you in-cluster, by design.** The image's entrypoint
+> ([`scripts/docker-entrypoint.sh`](../scripts/docker-entrypoint.sh)) *can* create these
+> five files and the accounts database, which is how the single-host compose deployment
+> works ([deploy-compose.md §4](deploy-compose.md#4-what-the-first-start-creates)) — but
+> only when `LOCOL_BOOTSTRAP` is set, and this deployment deliberately never sets it.
+>
+> That is not a limitation to work around. A key generated inside a pod lives on the
+> container filesystem: it disappears on the next restart, logging every user out, and
+> if it were `db_encryption.key` it would take every stored LLM API key with it. The
+> keys belong in Secrets and the database on the PVC, provisioned here, where they
+> outlive any pod.
+>
+> On start the entrypoint reports what it found and starts the services either way, so a
+> Secret that is missing or incomplete still surfaces the way the rest of this section
+> describes — as a 500 naming the unreadable path — rather than as a CrashLoopBackOff.
 
 Create the namespace first, then the secrets in it:
 

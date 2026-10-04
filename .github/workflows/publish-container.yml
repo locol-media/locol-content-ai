@@ -159,6 +159,7 @@ jobs:
 
           NAME="locol-content-ai-$VERSION"
           echo "NAME=$NAME" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
           mkdir -p "$NAME"
           cp deploy/compose/docker-compose.yml "$NAME/"
@@ -207,3 +208,50 @@ jobs:
             "$NAME.zip" "$NAME.tar.gz" \
             --clobber \
             --repo "${{ github.repository }}"
+
+      # GitHub always lists "Source code (zip)" in a release's assets and generated notes
+      # never mention anything else, so a release page points people at a source tarball
+      # that is not how this app is meant to be run. This prepends the two lines that say
+      # which file to take, above whatever notes the release already carries.
+      - name: Point the release notes at the package
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          REPO: ${{ github.repository }}
+          IMAGE: ghcr.io/${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          # Idempotent: `gh run rerun` on a release re-runs this whole job, and the notes
+          # are edited in place rather than appended to a fresh body. Without the marker
+          # a re-run would stack a second copy of the block on top of the first.
+          MARKER="<!-- compose-package -->"
+          BODY="$(gh release view "$TAG_NAME" --repo "$REPO" --json body --jq .body)"
+          case "$BODY" in
+            *"$MARKER"*)
+              echo "Release notes already name the package - nothing to do."
+              exit 0
+              ;;
+          esac
+
+          # printf line by line rather than a heredoc: a heredoc body has to start at
+          # column 0 to be readable as markdown, and column 0 ends the YAML block scalar
+          # this script lives in. Every line is a separate printf for the same reason -
+          # the markdown fence below would otherwise need to sit outside the block.
+          {
+            printf '%s\n\n' "$MARKER"
+            printf '## Install\n\n'
+            printf 'Download **`%s.zip`** below — not the source code — extract it, and:\n\n' "$NAME"
+            printf '```bash\n'
+            printf 'docker compose up -d\n'
+            printf '```\n\n'
+            printf 'Then open <http://localhost:8501> and register an account. The container\n'
+            printf 'creates its own keys and database on the first start, so there is nothing\n'
+            printf 'else to set up — see the `README.md` inside the archive, or\n'
+            printf '[docs/deploy-compose.md](https://github.com/%s/blob/main/docs/deploy-compose.md).\n\n' "$REPO"
+            printf 'That archive pins the image to `%s:%s`.\n\n' "$IMAGE" "$VERSION"
+            printf -- '---\n\n'
+            printf '%s\n' "$BODY"
+          } > release-notes.md
+
+          gh release edit "$TAG_NAME" --notes-file release-notes.md --repo "$REPO"

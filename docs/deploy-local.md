@@ -200,10 +200,11 @@ setup step that runs through `uv` — it reuses the BackEnd's own
 **Don't skip it.** Nothing in the running app creates the `BackEnd/db/`
 directory, so a missing accounts database doesn't self-heal — registration and
 login fail with `unable to open database file`. (That is specific to a native
-run like this one. The container image runs this same script from its entrypoint
-when the database is absent — [deploy-compose.md
-§4](./deploy-compose.md#4-what-the-first-start-creates) — so a Docker or
-Kubernetes deployment bootstraps itself.) To run just this step:
+run like this one. The container image can run this same script from its
+entrypoint when the database is absent, which the Docker Compose deployment asks
+it to — [deploy-compose.md
+§4](./deploy-compose.md#4-what-the-first-start-creates). Kubernetes does not: it
+provisions the database on its PVC instead.) To run just this step:
 
 ```bash
 uv run --project BackEnd python scripts/create_user_database.py
@@ -396,7 +397,7 @@ See [BackEnd/README.md](../BackEnd/README.md#configuration) for the full referen
   step 4 hasn't run. Nothing in the app creates the `db/` directory, so this does
   not self-heal in a native run; re-run `./scripts/setup-local.ps1` (or `.sh`) from
   the repo root. `./run-web-debug.ps1` checks for this before starting anything.
-  (In a container the entrypoint creates it instead — see
+  (Under Docker Compose the entrypoint creates it instead — see
   [deploy-compose.md §4](./deploy-compose.md#4-what-the-first-start-creates).)
 - **The installer stops with "found one half of the JWT keypair but not the
   other":** one of the two `.pem` files was deleted or truncated. It won't

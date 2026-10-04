@@ -127,10 +127,15 @@ EXPOSE ${LOCOL_WEB_PORT} ${LOCOL_BACKEND_PORT} ${LOCOL_SQLITE_WEB_PORT}
 # write outside /app, /home/app and /tmp.
 USER app
 
-# Create any missing start-up artifacts (key pairs, DB encryption key, users database),
-# then exec the CMD below. Invoked through /bin/bash rather than relying on the script's
-# executable bit, which a checkout on a filesystem without permission bits - a Windows
-# one - may not preserve. Set LOCOL_BOOTSTRAP=false to skip the bootstrap entirely.
+# Report on the start-up artifacts (key pairs, DB encryption key, users database) and,
+# with LOCOL_BOOTSTRAP=true, create the missing ones - then exec the CMD below. Creating
+# them is opt-in, not the default: a deployment that provisions them from outside, as
+# k8s/ does with Secrets and a PVC, must not have artifacts seeded underneath it. The
+# compose file in deploy/compose/ sets the flag, because a single host has nowhere else
+# for them to come from.
+#
+# Invoked through /bin/bash rather than relying on the script's executable bit, which a
+# checkout on a filesystem without permission bits - a Windows one - may not preserve.
 ENTRYPOINT ["/bin/bash", "/app/scripts/docker-entrypoint.sh"]
 
 # Start supervisor to manage both processes

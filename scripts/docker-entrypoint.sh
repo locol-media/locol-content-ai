@@ -1,35 +1,44 @@
 #!/usr/bin/env bash
 #
-# Container entrypoint: create whatever start-up artifacts are missing, then hand
-# off to the command the image was given (supervisord - see the CMD in /Dockerfile).
+# Container entrypoint: report on the start-up artifacts and, when asked to, create the
+# ones that are missing - then hand off to the command the image was given (supervisord,
+# see the CMD in /Dockerfile).
 #
-# The image needs three things that cannot be baked into it, because every one of
-# them is either a secret or user data:
+# The image needs three things that cannot be baked into it, because every one of them
+# is either a secret or user data:
 #
 #   keys/{private,public,enc_private,enc_public}_key.pem   the session-token key pairs
 #   keys/db_encryption.key                                 Fernet key for LLM keys at rest
 #   BackEnd/db/persistent_data.sqlite                      the shared accounts database
 #
-# A Kubernetes deployment supplies the keys from Secrets (docs/deploy-k8s.md section 4),
-# so this script finds them already present and skips straight to the database. A
-# `docker compose up` with an empty ./data folder (docs/deploy-compose.md) has none of
-# them, and this is what makes that work with no host-side setup step.
+# CREATING THEM IS OPT-IN: set LOCOL_BOOTSTRAP=true. Left unset, this script only looks
+# and reports, and creates nothing.
 #
-# It delegates to the same three generators the host-side installer uses, so there is
-# one implementation of each artifact:
+# That default is deliberately the cautious one, because the two deployments want
+# opposite things:
+#
+#   - A single-host `docker compose up` (docs/deploy-compose.md) has nowhere else for
+#     these to come from, so the compose file sets LOCOL_BOOTSTRAP=true and an empty
+#     ./data becomes a working install with no setup step.
+#   - A Kubernetes deployment (docs/deploy-k8s.md) provisions all of them outside the
+#     pod - the keys as Secrets, the database on a PVC - and must NOT have artifacts
+#     seeded underneath it. A key generated inside a pod would live on the container
+#     filesystem, vanish on the next restart, and take every stored LLM API key with it
+#     if it were the Fernet one. So an unset flag changes nothing there, whatever the
+#     manifests say.
+#
+# When creation is on, it delegates to the same three generators the host-side installer
+# uses, so there is one implementation of each artifact:
 #
 #   scripts/generate-jwt-keys.sh
 #   scripts/generate-db-encryption-key.sh
 #   scripts/create_user_database.py
 #
-# Contract, identical to scripts/setup-local.sh: every step detects whether it is
+# and takes the same contract as scripts/setup-local.sh: every step detects whether it is
 # already done and skips it, and nothing is ever regenerated or overwritten. It NEVER
 # passes --force. Regenerating keys/db_encryption.key makes every stored LLM API key
-# permanently undecryptable, so a half-present set of artifacts is reported as an error
-# for a human to resolve rather than repaired by guessing.
-#
-# Set LOCOL_BOOTSTRAP=false to skip all of this - for a deployment that provisions
-# every artifact itself and wants a missing one to fail loudly at first use instead.
+# permanently undecryptable, so a half-present set is reported as an error for a human to
+# resolve rather than repaired by guessing.
 
 set -euo pipefail
 
@@ -38,9 +47,9 @@ APP_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # The same two variables the application reads - BackEnd/src/jwt_auth.py::_keys_dir()
 # and BackEnd/src/db_crypto.py::_load_key(). Resolving them here rather than hardcoding
-# a path is what keeps the bootstrap from writing somewhere the app does not look: in
-# Kubernetes these are /keys and /db-key (two separate Secrets), while the image's own
-# ENV points both at /keys.
+# a path is what keeps this from looking somewhere the app does not: in Kubernetes they
+# are /keys and /db-key (two separate Secrets), while the image's own ENV points both
+# at /keys.
 #
 # The fallbacks match the app's own defaults, which are relative to BackEnd's working
 # directory - so an image built without the ENV block still agrees with the services.
@@ -51,12 +60,13 @@ DB_KEY_DIR="${LOCOL_DB_ENCRYPTION_KEY_LOCATION:-$KEYS_DIR}"
 # `directory=/app/BackEnd` supervisord runs the BackEnd from. The per-user databases
 # that live alongside it are created on demand at registration, not here.
 DB_PATH="$APP_ROOT/BackEnd/db/persistent_data.sqlite"
+DB_KEY_PATH="$DB_KEY_DIR/db_encryption.key"
 
 JWT_KEY_NAMES=(private_key.pem public_key.pem enc_private_key.pem enc_public_key.pem)
 
-# Step name -> outcome, printed as a summary before exec so `docker compose logs` shows
-# at a glance whether a restart touched anything. Parallel arrays rather than an
-# associative one, to match setup-local.sh.
+# Step name -> outcome, printed as a summary before exec so `docker compose logs` or
+# `kubectl logs` shows at a glance whether a start touched anything. Parallel arrays
+# rather than an associative one, to match setup-local.sh.
 SUMMARY_NAMES=()
 SUMMARY_VALUES=()
 
@@ -75,6 +85,14 @@ key_file_ok() {
     if [ "$pem" = "pem" ]; then
         head -n 1 "$path" | grep -q '^-----BEGIN' || return 1
     fi
+    return 0
+}
+
+# Every real SQLite file opens with this 16-byte magic string. A truncated or
+# placeholder file otherwise fails later as "file is not a database".
+db_file_ok() {
+    [ -s "$DB_PATH" ] || return 1
+    head -c 15 "$DB_PATH" | grep -q '^SQLite format 3' || return 1
     return 0
 }
 
@@ -97,11 +115,6 @@ another user. If it is a bind mount (the docker-compose.yml ships ./data/keys an
 ./data/db), fix the ownership on the host and start again:
 
   sudo chown -R 1000:1000 ./data
-
-On Docker Desktop (Windows/macOS) this does not normally happen. If the directory is
-meant to be read-only - a Kubernetes Secret, say - then the artifact is missing from
-it: see docs/deploy-k8s.md section 4 for creating the locol-ai-jwt-keys and
-locol-ai-db-key secrets.
 EOF
         exit 1
     fi
@@ -121,25 +134,18 @@ run_repo_script() {
     bash "$path" "$@"
 }
 
+# --- Is creating artifacts switched on? --------------------------------------
+
+BOOTSTRAP=0
 case "${LOCOL_BOOTSTRAP:-}" in
-    0|false|FALSE|no|NO)
-        echo "Locol Content AI: LOCOL_BOOTSTRAP is off - not creating any start-up artifacts."
-        exec "$@"
-        ;;
+    1|true|TRUE|True|yes|YES|on|ON) BOOTSTRAP=1 ;;
 esac
 
-echo "Locol Content AI: checking start-up artifacts"
-note "JWT keys:       $KEYS_DIR"
-note "DB encryption:  $DB_KEY_DIR"
-note "Users database: $DB_PATH"
+# --- Take stock --------------------------------------------------------------
+#
+# Done for both modes before anything is written, so the report is the same whether or
+# not this start is allowed to act on it.
 
-# --- 1. JWT key pairs --------------------------------------------------------
-
-step "Session-token key pairs (4 files in $KEYS_DIR)"
-
-# Four files, two pairs: RSA for the signature, EC P-256 for the JWE wrapper the signed
-# token is sealed in. It is all four or none - any partial set means some part of the
-# token path has no usable key, and every login fails. See docs/jwt.md.
 PRESENT_KEYS=""
 MISSING_KEYS=""
 for key_name in "${JWT_KEY_NAMES[@]}"; do
@@ -152,13 +158,72 @@ for key_name in "${JWT_KEY_NAMES[@]}"; do
     fi
 done
 
+DB_KEY_PRESENT=0
+key_file_ok "$DB_KEY_PATH" && DB_KEY_PRESENT=1
+
+DB_PRESENT=0
+db_file_ok && DB_PRESENT=1
+
+echo "Locol Content AI: checking start-up artifacts"
+note "JWT keys:       $KEYS_DIR"
+note "DB encryption:  $DB_KEY_DIR"
+note "Users database: $APP_ROOT/BackEnd/db"
+
+# --- Report-only mode (the default) ------------------------------------------
+
+if [ "$BOOTSTRAP" -eq 0 ]; then
+    step "Creating artifacts is off (LOCOL_BOOTSTRAP is not set)"
+
+    if [ -z "$MISSING_KEYS" ]; then
+        note "Session-token key pairs: present"
+    else
+        note "Session-token key pairs: INCOMPLETE"
+        printf '%s' "$MISSING_KEYS"
+    fi
+    [ "$DB_KEY_PRESENT" -eq 1 ] && note "DB encryption key:       present" \
+                                || note "DB encryption key:       MISSING ($DB_KEY_PATH)"
+    [ "$DB_PRESENT" -eq 1 ] && note "Users database:          present" \
+                            || note "Users database:          missing ($DB_PATH)"
+
+    # Warn, but start anyway. The pod/container coming up and failing at the point of
+    # use - with BackEnd logging which path it could not read - is the behaviour
+    # docs/deploy-k8s.md section 4 documents for a Secret that is missing or predates
+    # the encrypted session token. Refusing to start instead would turn that into a
+    # CrashLoopBackOff and defeat the `optional: true` backward compatibility the
+    # manifests are careful to keep.
+    if [ -n "$MISSING_KEYS" ] || [ "$DB_KEY_PRESENT" -eq 0 ]; then
+        echo
+        warn "Starting anyway, but authentication cannot work until the files above exist.
+         Every authenticated request will return 500 'Server authentication key is not
+         configured', and BackEnd will log the path it could not read.
+
+         Supply them the way your deployment is meant to:
+           Kubernetes - as the locol-ai-jwt-keys and locol-ai-db-key Secrets
+                        (docs/deploy-k8s.md section 4). This is the correct place:
+                        a key generated in the pod is lost on the next restart.
+           single host - set LOCOL_BOOTSTRAP=true to have this container generate
+                        them into its mounted volumes (docs/deploy-compose.md)."
+    fi
+
+    echo
+    exec "$@"
+fi
+
+# --- Creation mode (LOCOL_BOOTSTRAP is on) -----------------------------------
+
+step "Session-token key pairs (4 files in $KEYS_DIR)"
+
+# Four files, two pairs: RSA for the signature, EC P-256 for the JWE wrapper the signed
+# token is sealed in. It is all four or none - any partial set means some part of the
+# token path has no usable key, and every login fails. See docs/jwt.md.
 if [ -z "$MISSING_KEYS" ]; then
     note "Already present - skipping."
     record "JWT key pairs" "already present"
 elif [ -n "$PRESENT_KEYS" ]; then
     # The generator refuses to write over the files that exist, and this script never
     # passes --force, so hand the decision back rather than guessing which half is the
-    # good one.
+    # good one. Only reachable with creation switched on, which means a single-host
+    # install - where starting half-configured is worse than not starting.
     cat >&2 <<EOF
 Error: found an incomplete set of session-token keys:
 ${PRESENT_KEYS}${MISSING_KEYS}
@@ -174,12 +239,9 @@ else
     record "JWT key pairs" "created"
 fi
 
-# --- 2. Database encryption key ----------------------------------------------
+step "Database encryption key ($DB_KEY_PATH)"
 
-step "Database encryption key ($DB_KEY_DIR/db_encryption.key)"
-
-DB_KEY_PATH="$DB_KEY_DIR/db_encryption.key"
-if key_file_ok "$DB_KEY_PATH"; then
+if [ "$DB_KEY_PRESENT" -eq 1 ]; then
     note "Already present - skipping."
     record "DB encryption key" "already present"
 else
@@ -196,20 +258,9 @@ else
          deployment it is on the host at ./data/keys/db_encryption.key."
 fi
 
-# --- 3. Shared users database ------------------------------------------------
-
 step "Shared users database ($DB_PATH)"
 
-DB_USABLE=0
-if [ -s "$DB_PATH" ]; then
-    # A truncated or placeholder file otherwise fails later as "file is not a database".
-    # Every real SQLite file opens with this 16-byte magic string.
-    if head -c 15 "$DB_PATH" | grep -q '^SQLite format 3'; then
-        DB_USABLE=1
-    fi
-fi
-
-if [ "$DB_USABLE" -eq 1 ]; then
+if [ "$DB_PRESENT" -eq 1 ]; then
     note "Already present - skipping."
     record "Users database" "already present"
 elif [ -e "$DB_PATH" ]; then

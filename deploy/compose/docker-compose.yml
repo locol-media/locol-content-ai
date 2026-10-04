@@ -59,6 +59,13 @@ services:
       - ./data/db:/app/BackEnd/db
 
     environment:
+      # Let the container create its own keys and accounts database in ./data when they
+      # are not there yet. This is what makes a first start work with nothing but Docker
+      # installed, and it is off in the image by default - a deployment that provisions
+      # these from outside (Kubernetes, with Secrets and a PVC) must not have them seeded
+      # underneath it. Every start after the first finds them present and changes
+      # nothing. See docs/deploy-compose.md section 4.
+      LOCOL_BOOTSTRAP: ${LOCOL_BOOTSTRAP:-true}
       # Where your browser reaches the API and the Content Editor. These two URLs are
       # handed to the browser, so they must be what the browser can reach - not what the
       # container can. The defaults are right for using the app on this same machine
