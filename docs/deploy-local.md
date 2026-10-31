@@ -1,12 +1,12 @@
-# Running Locol Content AI locally
+# Local development setup
 
-This guide sets up Locol Content AI on a developer machine for local use and development,
+This guide sets up Locol Content AI on a developer machine for working on the code,
 using the native Python toolchain ([uv](https://docs.astral.sh/uv/)). For a
 production Kubernetes deployment, see [deploy-k8s.md](./deploy-k8s.md) instead.
 
 If you only want to *run* the app rather than work on it, you don't need any of this:
-[deploy-compose.md](./deploy-compose.md) is a release download and `docker compose up -d`,
-with the container creating its own keys and database.
+the standard install is [deploy-compose.md](./deploy-compose.md) — a release download and
+`docker compose up -d`, with the container creating its own keys and database.
 
 ## 1. Overview
 

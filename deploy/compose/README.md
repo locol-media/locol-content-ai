@@ -8,9 +8,24 @@ You need **Docker** with the Compose plugin ([Docker
 Desktop](https://docs.docker.com/desktop/) on Windows or macOS already includes it) and
 about 2 GB of disk. Nothing else: no Python, no clone, no setup script.
 
+## Get it
+
+If you are reading this inside an extracted release archive, skip ahead to
+[Start it](#start-it).
+
+Otherwise, download **`locol-content-ai-<version>.zip`** (Windows, macOS) or **`.tar.gz`**
+(Linux) from the [latest release][releases] — the package, not "Source code" — and
+extract it. On a server:
+
+```bash
+gh release download --repo locol-media/locol-content-ai --pattern 'locol-content-ai-*.tar.gz'
+tar -xzf locol-content-ai-*.tar.gz
+cd locol-content-ai-*/
+```
+
 ## Start it
 
-From this folder:
+From the extracted folder:
 
 ```bash
 docker compose up -d
@@ -27,14 +42,25 @@ docker compose logs -f
 When the log settles, open **<http://localhost:8501>** and register an account. Accounts
 are local to this install; the first one you create is yours.
 
-Then set an LLM provider key, which the content generation needs and which this package
-deliberately does not ask for up front:
+Then tell it which model to use. Content generation needs this, and the package
+deliberately does not ask for a key up front:
 
-**⚙️ Settings and Tools** → **⚙️ Config Manager** → tab **🤖 LLMs** → expand **🤖 Locol
-AI Default** → fill in **API Key** → **💾 Update**
+1. **⚙️ Settings and Tools** → **⚙️ Config Manager** → tab **🤖 LLMs**
+2. Expand **🤖 Locol AI Default**
+3. Set **API Style** to your provider — `openai`, `gemini` or `claude`
+4. Set **Model** to a model name that provider offers, for example `gpt-4o-mini`,
+   `gemini-2.0-flash` or `claude-sonnet-4-5`. The default row ships with no model, so
+   this is not optional
+5. Paste your key into **API Key**
+6. **💾 Update**
 
-A key set there is encrypted at rest and belongs to your account only. Gemini, OpenAI,
-Claude and local models are all supported — set **API style** to match.
+Leave **API URL** empty for the three hosted providers. For a local model (Ollama, LM
+Studio, vLLM) choose `openai`, set **API URL** to the server's OpenAI-compatible address
+— for Ollama on this machine, `http://host.docker.internal:11434/v1` with Docker Desktop
+or the host's LAN address on Linux, because `localhost` inside the container is the
+container — and leave the key empty if the server takes none.
+
+A key set there is encrypted at rest and belongs to your account only.
 
 From there, [how-to-use.md][how-to-use] walks through the whole cycle: the survey that
 draws out what you know, the stories it proposes, turning one into a series of posts, and
@@ -69,7 +95,7 @@ docker compose ps                  # is it running, and is it healthy
 docker compose logs -f             # follow the logs
 docker compose restart             # restart it
 docker compose down                # stop it; ./data is untouched
-docker compose pull && docker compose up -d    # upgrade (see below)
+docker compose pull && docker compose up -d    # pull and restart (see Upgrading)
 ```
 
 ## Configuration
@@ -95,20 +121,26 @@ API and the Content Editor, which your browser calls directly.
 
 ## Upgrading
 
-This package pins the image to the release it came from, so an upgrade is deliberate.
-Download the newer release package and copy your `./data` (and `.env`, if you made one)
-across, or just point this one at the newer image in `.env`:
+This package pins the image to the release it came from — the `image:` line in
+`docker-compose.yml` names an exact version — so an upgrade is deliberate, and
+`docker compose pull` on its own changes nothing. Two ways to move up:
 
-```ini
-LOCOL_IMAGE_TAG=0.3.0
-```
+- **Take the newer package (recommended).** Stop this one with `docker compose down`,
+  extract the newer release, move `./data` (and `.env`, if you made one) into it, and run
+  `docker compose up -d` there. You get that release's compose file and README as well.
+- **Edit the pin in place.** Change the version at the end of the `image:` line in
+  `docker-compose.yml`, for example to `ghcr.io/locol-media/locol-content-ai:0.3.0`, then:
 
-```bash
-docker compose pull && docker compose up -d
-```
+  ```bash
+  docker compose pull && docker compose up -d
+  ```
+
+  `LOCOL_IMAGE_TAG` in `.env` does **not** do this here: it only applies to the
+  unpinned compose file in the repository.
 
 Your data survives: it is in `./data` on the host, not in the container. The entrypoint
-finds every artifact already present and changes nothing.
+finds every artifact already present and changes nothing. Rolling back is the same edit
+with the older version — release tags never move.
 
 ## If it doesn't start
 
@@ -164,6 +196,7 @@ One of them, [Intro.js](https://introjs.com), is **AGPL-3.0**. If you deploy thi
 other people to use over a network, you must offer them its source — linking
 <https://github.com/locol-media/locol-content-ai> from the running app is enough.
 
+[releases]: https://github.com/locol-media/locol-content-ai/releases/latest
 [how-to-use]: https://github.com/locol-media/locol-content-ai/blob/main/docs/how-to-use.md
 [deploy-compose]: https://github.com/locol-media/locol-content-ai/blob/main/docs/deploy-compose.md
 [security]: https://github.com/locol-media/locol-content-ai/blob/main/docs/security-management.md

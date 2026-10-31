@@ -71,8 +71,10 @@ docker compose up -d
 docker compose logs -f
 ```
 
-Then open `http://localhost:8501`, register an account, and set a provider key in
-**⚙️ Config Manager → 🤖 LLMs → 🤖 Locol AI Default → API Key**. That is the recommended
+Then open `http://localhost:8501`, register an account, and configure the model in
+**⚙️ Config Manager → 🤖 LLMs → 🤖 Locol AI Default**: set **API Style**, **Model** and
+**API Key**, then **💾 Update**. The seeded row has no model, so a key alone is not
+enough. That is the recommended
 place for it — encrypted at rest, scoped to one account, never in a file git can see
 ([deploy-local.md §4.3](./deploy-local.md#43-the-llm-provider-key) covers why the
 alternative is worse).
@@ -192,16 +194,16 @@ uvx sqlite-web data/db/persistent_data.sqlite
 ## 8. Upgrading
 
 The archive's pinned tag means upgrades are deliberate. Either download the newer release
-package and move your `./data` (and `.env`) across, or point the current one at a newer
-image in `.env`:
-
-```ini
-LOCOL_IMAGE_TAG=0.3.0
-```
+package and move your `./data` (and `.env`) across, or edit the version on the `image:`
+line of the archive's `docker-compose.yml` and pull:
 
 ```bash
 docker compose pull && docker compose up -d
 ```
+
+`LOCOL_IMAGE_TAG` in `.env` has no effect on an archive: the release workflow replaces
+the `${LOCOL_IMAGE_TAG:-latest}` reference with a literal tag when it pins the image (§2).
+It only selects the image when running from a clone of `deploy/compose/`.
 
 Data survives: it is on the host, and the entrypoint finds every artifact present and
 changes nothing. Rolling back is re-pinning the older tag the same way — version tags are

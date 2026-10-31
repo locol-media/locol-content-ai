@@ -46,6 +46,37 @@ the judgment about which community it genuinely belongs in, remain with you.
 For a click-by-click walkthrough of the whole cycle, see
 [docs/how-to-use.md](./docs/how-to-use.md).
 
+## Install
+
+The standard install is **Docker Compose**: one container on your own machine, from a
+release download. You need [Docker Desktop](https://docs.docker.com/desktop/) (or Docker
+Engine with the Compose plugin on Linux) and about 2 GB of disk — no clone, no Python, no
+setup script.
+
+1. Download **`locol-content-ai-<version>.zip`** from the
+   [latest release](https://github.com/locol-media/locol-content-ai/releases/latest) — the
+   package, not "Source code" — and extract it.
+2. In the extracted folder, run:
+
+   ```bash
+   docker compose up -d
+   ```
+
+   The first start pulls the image and creates its own keys and database in `./data`.
+3. Open **<http://localhost:8501>** and register an account.
+4. Pick your model: **⚙️ Settings and Tools → ⚙️ Config Manager → 🤖 LLMs → 🤖 Locol AI
+   Default**, set **API Style**, **Model** and **API Key**, then **💾 Update**. The key is
+   encrypted at rest.
+5. **Back up `data/keys/db_encryption.key`** before you store anything real — it is the
+   only copy of the key that decrypts every stored API key.
+
+The `README.md` inside the package covers everyday commands, reaching the app from
+another machine, upgrading and troubleshooting; the full guide is
+[docs/deploy-compose.md](./docs/deploy-compose.md). Then
+[docs/how-to-use.md](./docs/how-to-use.md) walks through the app itself.
+
+Working on the code instead? See [Development](#development) below.
+
 ## How it's put together
 
 Three components share one backend:
@@ -64,14 +95,25 @@ FrontEnd (built into /www)┘        (OpenAI / Gemini / Claude / local)
 
 See each subproject's README for details: [BackEnd](./BackEnd/README.md), [Web](./Web/README.md), [FrontEnd](./FrontEnd/README.md). For how `Web` hands off to the Content Editor and what happens from there — the endpoints, payloads and the round trip back — see [docs/content-editor-flow.md](./docs/content-editor-flow.md).
 
-## Getting started
+## Documentation
 
 - **Using the app** — the full workflow, stage by stage: [docs/how-to-use.md](./docs/how-to-use.md)
+- **Installing with Docker Compose** — the standard install, in full: what the first start creates, backups, other machines, reverse proxies, upgrading, configuration and troubleshooting: [docs/deploy-compose.md](./docs/deploy-compose.md)
 - **Architecture** — the components, the request path, where state lives, and what a production deployment looks like: [docs/application-architecture.md](./docs/application-architecture.md)
-- **Docker Compose** — the shortest path to a running install: download a release package, `docker compose up -d`, no clone and no toolchain. It creates its own keys and database on the first start: [docs/deploy-compose.md](./docs/deploy-compose.md)
-- **Local development** — prerequisites, one-time key/database setup, running both services and building the Content Editor: [docs/deploy-local.md](./docs/deploy-local.md)
-- **Kubernetes (EKS / DigitalOcean)** — image build, secrets, manifests, DNS/TLS: [docs/deploy-k8s.md](./docs/deploy-k8s.md)
-- **Cutting a release** — the GHCR tag scheme, how to publish an image, provenance and rollback: [docs/release.md](./docs/release.md)
+- **Kubernetes (EKS / DigitalOcean)** — the hosted, multi-user deployment: image build, secrets, manifests, DNS/TLS: [docs/deploy-k8s.md](./docs/deploy-k8s.md)
+- **Cutting a release** — the GHCR tag scheme, how to publish an image, the Compose package, provenance and rollback: [docs/release.md](./docs/release.md)
+
+## Development
+
+To change the code, run the services from a clone with the native Python toolchain
+([uv](https://docs.astral.sh/uv/)) instead of the container:
+[docs/deploy-local.md](./docs/deploy-local.md) covers the prerequisites, the one-time
+key and database setup, running BackEnd and Web side by side, and rebuilding the
+Content Editor. That setup is for development; to simply *run* the app, use the
+[Install](#install) steps above.
+
+Tests: `cd BackEnd && uv run pytest tests/ -v` is hermetic. The browser suite in
+[QualityAssurance/](./QualityAssurance/README.md) needs both services running.
 - **LLM API keys** — how they're encrypted at rest, and how the Bifrost gateway gives each user a capped, scoped virtual key instead of a shared provider key: [docs/llm-keys.md](./docs/llm-keys.md)
 - **Security overview** — the map of every layer, the controls no other document covers, and an honest register of the gaps: [docs/security-management.md](./docs/security-management.md)
 
@@ -104,7 +146,7 @@ so there is no setup step: [docs/deploy-compose.md](./docs/deploy-compose.md).
 
 ## Security
 
-If you're deploying this yourself: rotate the JWT keypair and DB encryption key before going to production (see [docs/deploy-local.md](./docs/deploy-local.md#41-the-keys-it-generates)), and set your LLM provider key in the app — register an account, then **⚙️ Config Manager → 🤖 LLMs → Locol AI Default**, where it is encrypted at rest. Prefer that to editing `BackEnd/config/default/llms/llm.yaml`, which is tracked by git and seeds every user with the same key ([docs/deploy-local.md §4.3](./docs/deploy-local.md#43-the-llm-provider-key)). See [BackEnd/README.md](./BackEnd/README.md#configuration) for the full configuration reference.
+If you're deploying this yourself: set your LLM provider key in the app — register an account, then **⚙️ Config Manager → 🤖 LLMs → Locol AI Default**, where it is encrypted at rest. Prefer that to editing `BackEnd/config/default/llms/llm.yaml`, which is tracked by git and seeds every user with the same key ([docs/deploy-local.md §4.3](./docs/deploy-local.md#43-the-llm-provider-key)). The Docker Compose install generates fresh keys on its first start and has no TLS of its own — put it behind an HTTPS reverse proxy before anyone else uses it ([docs/deploy-compose.md](./docs/deploy-compose.md)). A development setup from a clone should rotate the JWT keypair and DB encryption key before it holds real data ([docs/deploy-local.md](./docs/deploy-local.md#41-the-keys-it-generates)). See [BackEnd/README.md](./BackEnd/README.md#configuration) for the full configuration reference.
 
 **[docs/security-management.md](./docs/security-management.md) is the entry point.** It maps every layer of the defence — identity, session, tenancy, secrets at rest, spend control, the network edge — says which document owns each one, and covers the controls that have no deep-dive of their own: how per-user database isolation works, how untrusted text is handled, and how the code is scanned. It ends with a register of the gaps that nothing else records.
 
